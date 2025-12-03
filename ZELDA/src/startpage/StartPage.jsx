@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import './StartPage.css';
+import './StartPage_light.css';
 import { SHA256 } from 'crypto-js';
 
 function StartPage() {
@@ -17,12 +17,12 @@ function StartPage() {
     },
     {
       id: 2,
-      code: "L2_INTER",
-      title: "LEVEL 2: WHITE HAT",
-      subtitle: "Crypto / Forensics",
-      description: "1단계를 클리어하고 얻은 비밀번호(Flag)를 입력하십시오.",
-      url: "https://webhacking.kr/",
-      passwordHash: "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4"
+      title: "LEVEL 2: SECURE STORAGE?",
+      subtitle: "Web Storage & Web Crypto API",
+      description: "강력하게 암호화된 금고입니다. 하지만 열쇠가 어딘가에 떨어져 있습니다.",
+      url: "./level2",
+      // FLAG{Storage_Is_Not_Safe_Place} 의 해시값
+      passwordHash: "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4" 
     },
     {
       id: 3,
@@ -32,7 +32,7 @@ function StartPage() {
       description: "2단계를 클리어하고 얻은 비밀번호(Flag)를 입력하십시오.",
       url: "https://pwnable.kr/",
       // 원래 정답: FLAG{Keep_Going}
-      passwordHash: "94c6328334465d6c59b32d201c107f9c8d19736c013b868e4266e74df3a0cd35"
+      passwordHash: "d51b798ff5f8c5de686d421868db4d8ed7b703edba0e259c610b8122a9845b74"
     },
   ];
 
