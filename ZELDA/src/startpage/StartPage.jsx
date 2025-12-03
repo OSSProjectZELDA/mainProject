@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import './StartPage_light.css';
+import './StartPage.css';
 import { SHA256 } from 'crypto-js';
 
 function StartPage() {
@@ -22,7 +22,7 @@ function StartPage() {
       subtitle: "Crypto / Forensics",
       description: "1단계를 클리어하고 얻은 비밀번호(Flag)를 입력하십시오.",
       url: "https://webhacking.kr/",
-      passwordHash: "b4c09033372957e8006df26693a129d2f2d936162a12bf5a9e3347c6171542f2"
+      passwordHash: "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4"
     },
     {
       id: 3,

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import '../startpage/startPage_light.css'; // 스타일은 기존 것 재사용
+//import '../startpage/startPage.css'; 
 
 function Level1() {
   const [inputPassword, setInputPassword] = useState("");
