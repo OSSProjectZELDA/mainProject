@@ -84,7 +84,7 @@ function Level1AdminPage() {
                             </p>
                             
                             <div className="acu-flag">
-                                FLAG{'{'}Blind_SQLi_Success_2025{'}'}
+                                FLAG{'{'}WayMaker{'}'}
                             </div>
                             
                             <p style={{ fontSize: '11px', color: '#999', marginTop: '10px' }}>
