@@ -1,0 +1,422 @@
+/* src/HackingLab.css */
+
+:root {
+  --primary-color: #2563eb;       
+  --primary-light: #eff6ff;
+  --primary-dark: #1e40af;
+  --text-main: #1f2937;           
+  --text-sub: #4b5563;            
+  --bg-body: #f8fafc;             
+  --bg-panel: #ffffff;            
+  --border-color: #e2e8f0;        
+  --code-bg: #0f172a;             
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+  background-color: var(--bg-body);
+  color: var(--text-main);
+  line-height: 1.6;
+}
+
+/* 헤더 */
+.hacking-header {
+  background-color: var(--bg-panel);
+  border-bottom: 1px solid var(--border-color);
+  padding: 0 30px; /* 좌우 여백 줄임 */
+  height: 60px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+/* 레이아웃 */
+.theory-container {
+  display: flex;
+  max-width: 1200px;
+  margin: 0 auto;
+  min-height: calc(100vh - 60px);
+}
+
+/* 사이드바 */
+.sidebar {
+  width: 240px; /* 너비 약간 줄임 */
+  flex-shrink: 0;
+  background-color: var(--bg-panel);
+  border-right: 1px solid var(--border-color);
+  position: sticky;
+  top: 60px;
+  height: calc(100vh - 60px);
+  padding: 25px 15px;
+  box-sizing: border-box;
+}
+
+.sidebar-title {
+  font-size: 0.75rem; /* 제목 크기 줄임 */
+  font-weight: 700;
+  color: #94a3b8;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  letter-spacing: 0.5px;
+}
+
+.sidebar-list { list-style: none; padding: 0; margin: 0; }
+
+.sidebar-link {
+  display: block;
+  text-decoration: none;
+  color: var(--text-sub);
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 0.9rem; /* 메뉴 폰트 줄임 */
+  transition: all 0.2s;
+  cursor: pointer;
+  margin-bottom: 2px;
+}
+.sidebar-link:hover { background-color: var(--bg-body); color: var(--primary-color); }
+.sidebar-link.active {
+  background-color: var(--primary-light);
+  color: var(--primary-color);
+  font-weight: 600;
+  border-left: 3px solid var(--primary-color);
+}
+
+/* 본문 영역 */
+.content-panel {
+  flex-grow: 1;
+  padding: 40px 60px; /* 패딩 줄임 */
+  background-color: var(--bg-panel);
+}
+
+/* 제목 스타일 (사이즈 대폭 축소) */
+.section-title {
+  font-size: 1.75rem; /* 2.2 -> 1.75 */
+  font-weight: 800;
+  color: var(--text-main);
+  margin-top: 0;
+  margin-bottom: 8px;
+  letter-spacing: -0.5px;
+}
+
+.section-desc {
+  font-size: 1rem;
+  color: var(--text-sub);
+  margin-bottom: 30px;
+}
+
+.sub-title1 {
+  font-size: 1.25rem; /* 1.6 -> 1.25 */
+  font-weight: 700;
+  color: var(--text-main);
+  margin-top: 40px;
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+}
+.sub-title1::before {
+  content: '';
+  display: inline-block;
+  width: 4px;
+  height: 18px;
+  background-color: var(--primary-color);
+  margin-right: 10px;
+  border-radius: 2px;
+}
+
+/* 본문 텍스트 스타일 */
+.text-body {
+  font-size: 0.95rem;
+  color: #374151;
+  margin-bottom: 15px;
+  line-height: 1.7;
+}
+
+/* 강조 박스 */
+.info-box {
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 20px;
+  margin: 20px 0;
+  font-size: 0.95rem;
+}
+.info-title {
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 8px;
+  display: block;
+}
+
+/* 코드 스니펫 (인라인) */
+.code-snippet {
+  background-color: #f1f5f9;
+  color: #ef4444;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: 'Consolas', monospace;
+  font-size: 0.9em;
+  font-weight: bold;
+}
+
+/* 실습 박스 */
+.practice-box {
+  background-color: #ffffff;
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  padding: 25px;
+  margin: 25px 0;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.lab-input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+  transition: border-color 0.2s;
+}
+.lab-input:focus { outline: none; border-color: var(--primary-color); }
+
+/* 쿼리 뷰어 */
+.query-viewer {
+  background: var(--code-bg);
+  padding: 20px;
+  border-radius: 8px;
+  color: #e2e8f0;
+  font-family: 'Consolas', monospace;
+  font-size: 13px; /* 폰트 줄임 */
+  line-height: 1.5;
+  margin-top: 15px;
+  border: 1px solid #1e293b;
+}
+.sql-kw { color: #60a5fa; font-weight: bold; }
+.sql-val { color: #facc15; font-weight: bold; }
+.sql-muted { opacity: 0.4; text-decoration: line-through; }
+.comment-badge { color: #4ade80; margin-left: 10px; font-size: 0.8rem; }
+
+/* 버튼 */
+.btn-action {
+  display: inline-block;
+  padding: 12px 30px;
+  font-size: 1rem;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  text-decoration: none;
+}
+.btn-action:hover { background-color: var(--primary-dark); }
+
+.game-btn-sidebar {
+  display: block;
+  margin-top: 20px;
+  padding: 10px;
+  text-align: center;
+  background-color: #1e293b;
+  color: white;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+.game-btn-sidebar:hover { background-color: #0f172a; }
+
+/* =========================================
+   [Level 1 Game] Acunetix/Zelda Retro Styles
+   ========================================= */
+.acu-body {
+  background-color: #e0e0e0;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  padding-top: 20px;
+  font-family: Verdana, sans-serif;
+}
+
+.acu-wrapper {
+  width: 980px;
+  background-color: #fff;
+  border: 1px solid #999;
+  box-shadow: 0 0 15px rgba(0,0,0,0.2);
+  min-height: 800px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.acu-header-top {
+  display: flex;
+  align-items: center;
+  border-bottom: 3px solid #d00;
+  background-color: #fff;
+  height: 60px;
+}
+
+.acu-logo-box {
+  background-color: #d00;
+  color: white;
+  font-weight: bold;
+  font-size: 28px;
+  padding: 0 20px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  font-family: 'Arial Black', sans-serif;
+  margin-right: 20px;
+}
+
+.acu-navbar {
+  background-color: #f9f9f9;
+  border-bottom: 1px solid #ccc;
+  padding: 8px 15px;
+  font-size: 11px;
+  color: #336699;
+  font-weight: bold;
+}
+
+.acu-container {
+  display: flex;
+  padding: 20px;
+  flex-grow: 1;
+}
+
+.acu-sidebar {
+  width: 180px;
+  margin-right: 20px;
+  font-size: 11px;
+}
+
+.acu-sidebar-header {
+  background-color: #dcdcdc;
+  padding: 5px;
+  font-weight: bold;
+  border-bottom: 1px solid #ccc;
+}
+
+.acu-main { flex-grow: 1; }
+
+.acu-login-frame {
+  border: 1px solid #ccc;
+  background-color: #f5f5f5;
+  padding: 20px;
+  width: 350px;
+  margin-top: 20px;
+}
+
+.acu-btn {
+  margin-top: 10px;
+  padding: 2px 10px;
+  border: 1px solid #999;
+  background: #eee;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.sim-exit-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #333;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 30px;
+  text-decoration: none;
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+/* src/HackingLab.css (아래 내용 추가/수정) */
+
+/* =========================================
+   [Level 1 Admin] Result Page Styles
+   ========================================= */
+
+/* 관리자 헤더 (빨간색 바) */
+.acu-admin-header {
+  background-color: #d00;
+  color: white;
+  padding: 0 20px;
+  height: 60px; /* Game 헤더와 높이 통일 */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.acu-admin-title {
+  font-family: 'Arial Black', sans-serif;
+  font-size: 18px;
+  letter-spacing: 1px;
+}
+
+/* 관리자 로그아웃 버튼 */
+.acu-logout-btn {
+  background-color: #fff;
+  color: #d00;
+  border: none;
+  padding: 5px 15px;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 11px;
+  border-radius: 2px;
+}
+.acu-logout-btn:hover { background-color: #eee; }
+
+/* 데이터 테이블 */
+.acu-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+  font-size: 12px;
+  background-color: #fff;
+}
+
+.acu-table th {
+  background-color: #eee;
+  border: 1px solid #ccc;
+  padding: 8px;
+  text-align: left;
+  color: #333;
+}
+
+.acu-table td {
+  border: 1px solid #ccc;
+  padding: 8px;
+  color: #555;
+}
+
+/* 짝수 줄 배경색 (가독성) */
+.acu-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+/* Flag 표시 박스 */
+.acu-secret-panel {
+  border: 2px dashed #d00;
+  background-color: #fff0f0;
+  padding: 20px;
+  margin-top: 30px;
+  text-align: center;
+}
+
+.acu-flag {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 10px 20px;
+  background-color: #fff;
+  border: 1px solid #d00;
+  color: #d00;
+  font-family: 'Courier New', monospace;
+  font-size: 18px;
+  font-weight: bold;
+}
