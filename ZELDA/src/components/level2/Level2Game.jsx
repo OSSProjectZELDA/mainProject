@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import './Level2.css'; 
+import './Level2Game.css'; 
 
 // --- 유틸리티 ---
 function bytesToArray(b) { return Array.from(b); }
