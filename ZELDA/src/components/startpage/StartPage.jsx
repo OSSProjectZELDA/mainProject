@@ -14,9 +14,9 @@ function StartPage() {
       description: "보안이 허술한 웹사이트의 취약점을 찾아 진입하십시오.",
       url: "/level1",
     },
-    {
+    {                 
       id: 2,
-      code: "L2_STORAGE",
+      code: "L2_STORAGE",      
       title: "LEVEL 2: SECURE STORAGE?",
       subtitle: "Web Storage & Web Crypto API",
       description: "강력하게 암호화된 금고입니다. 하지만 열쇠가 어딘가에 떨어져 있습니다.",
