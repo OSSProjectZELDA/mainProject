@@ -1,28 +1,39 @@
 // src/context/AuthContext.jsx
 import React, { createContext, useState, useContext } from 'react';
 
-// 컨텍스트 생성
 const AuthContext = createContext(null);
 
-// Provider 컴포넌트 (App 전체를 감쌀 껍데기)
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
+  // 초기값은 로컬 스토리지에서 가져오거나 null
+  const [user, setUser] = useState(() => {
+    const savedUser = localStorage.getItem('user');
+    return savedUser ? JSON.parse(savedUser) : null;
+  });
 
   const login = (userData) => {
     setUser(userData);
-    // 필요하다면 여기서 localStorage 저장 로직 추가 가능
+    localStorage.setItem('user', JSON.stringify(userData)); // 새로고침 유지용
   };
 
   const logout = () => {
     setUser(null);
+    localStorage.removeItem('user');
+  };
+
+  // 🔹 [추가됨] 화면의 유저 정보만 업데이트 (서버 통신 후 호출됨)
+  const updateProfile = (updatedData) => {
+    setUser((prev) => {
+      const newUser = { ...prev, ...updatedData };
+      localStorage.setItem('user', JSON.stringify(newUser));
+      return newUser;
+    });
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, login, logout, updateProfile }}>
       {children}
     </AuthContext.Provider>
   );
 };
 
-// 어디서든 쉽게 유저 정보를 가져다 쓸 수 있는 훅
 export const useAuth = () => useContext(AuthContext);

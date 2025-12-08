@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom'; 
 import { useAuth } from '../../context/AuthContext'; 
+import UserDetailModal from './UserDetailModal'; // 🔹 모달 컴포넌트 불러오기
 import './StartPage.css';
 
 function StartPage() {
-  const { user, logout } = useAuth();
+  const { user } = useAuth(); // 로그아웃 함수는 모달 안에서 사용하므로 여기선 user만 필요
+  const [isModalOpen, setIsModalOpen] = useState(false); // 🔹 모달 열림/닫힘 상태 관리
   
   const [unlockedStage, setUnlockedStage] = useState(1);
   const API_ENDPOINT = "https://693408584090fe3bf01eb2cf.mockapi.io/password"; 
@@ -37,19 +39,15 @@ function StartPage() {
   ];
 
   const handleCardClick = async (e, level) => {
-    // 1. 이미 해금된 레벨이면 통과
     if (level.id <= unlockedStage) return;
 
-    // 2. 잠긴 레벨 클릭 방지
     e.preventDefault();
     
-    // 3. 순서 체크
     if (level.id > unlockedStage + 1) {
       alert("⚠️ 이전 단계를 먼저 클리어하십시오.");
       return;
     }
 
-    // 4. Flag 입력 및 검증
     const input = prompt(`[SYSTEM] ${level.title} 접근 권한이 필요합니다.\n비밀번호(Flag)를 입력하십시오:`);
 
     if (input) {
@@ -65,7 +63,6 @@ function StartPage() {
 
         const data = await response.json();
         
-        // 데이터 구조에 맞춰 비밀번호 검증 (level 1 -> data[0]이 아님 주의, 로직 유지)
         if (data[level.id - 2] && input === data[level.id - 2].password) {
           alert("ACCESS GRANTED. 승인되었습니다.");
           setUnlockedStage(level.id);
@@ -82,14 +79,21 @@ function StartPage() {
 
   return (
     <>
-      {/* ⚡️ [핵심 수정] 네비게이션을 컨테이너 밖으로 완전히 분리했습니다. */}
-      {/* 이렇게 하면 아래 terminal-container의 중앙 정렬 영향을 받지 않습니다. */}
+      {/* 🔹 모달창 (isModalOpen이 true일 때만 보임) */}
+      {isModalOpen && <UserDetailModal onClose={() => setIsModalOpen(false)} />}
+
+      {/* 🔹 네비게이션 버튼 (화면 고정) */}
       <div className="top-nav">
         {user ? (
-          <button onClick={logout} className="nav-btn logout">
-            LOGOUT
+          // 로그인 상태: 유저 이름 버튼 표시 -> 클릭 시 모달 열기
+          <button 
+            onClick={() => setIsModalOpen(true)} 
+            className="nav-btn user-profile-btn"
+          >
+            USER: {user.name} ⚙️
           </button>
         ) : (
+          // 비로그인 상태: 로그인/회원가입 버튼 표시
           <>
             <Link to="/login" className="nav-btn">
               LOGIN
@@ -101,6 +105,7 @@ function StartPage() {
         )}
       </div>
 
+      {/* 🔹 메인 컨테이너 */}
       <div className="terminal-container">
         <div className="overlay-scanline"></div>
         

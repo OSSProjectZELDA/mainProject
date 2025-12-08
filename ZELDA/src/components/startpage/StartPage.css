@@ -1,10 +1,10 @@
 :root {
-  --bg-color: #f3f4f6;           
-  --text-main: #111827;          
-  --text-sub: #6b7280;           
-  --accent-color: #2563eb;       
-  --card-bg: #ffffff;            
-  --danger-color: #ef4444;       
+  --bg-color: #f3f4f6;
+  --text-main: #111827;
+  --text-sub: #6b7280;
+  --accent-color: #2563eb;
+  --card-bg: #ffffff;
+  --danger-color: #ef4444;
   --font-tech: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   --font-mono: 'Courier New', Courier, monospace;
 }
@@ -19,7 +19,73 @@ html, body, #root {
   overflow-x: hidden;
 }
 
-/* 2. 메인 컨테이너 */
+/* 2. 네비게이션 버튼 (화면 오른쪽 상단 고정) */
+.top-nav {
+  position: fixed !important; /* 강제 적용 */
+  top: 25px;
+  right: 30px;
+  display: flex;
+  gap: 15px;
+  z-index: 9999;
+}
+
+.nav-btn {
+  background-color: rgba(255, 255, 255, 0.9);
+  border: 2px solid var(--accent-color);
+  color: var(--accent-color);
+  padding: 8px 24px;
+  font-family: var(--font-mono);
+  font-weight: bold;
+  font-size: 0.9rem;
+  cursor: pointer;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  backdrop-filter: blur(5px);
+  transition: all 0.2s ease;
+}
+
+.nav-btn:hover {
+  background-color: var(--accent-color);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}
+
+/* 회원가입 버튼 */
+.nav-btn.signup {
+  background-color: var(--accent-color);
+  color: white;
+}
+.nav-btn.signup:hover {
+  background-color: #1d4ed8;
+}
+
+/* 유저 프로필 버튼 (초록색) */
+.user-profile-btn {
+  border-color: #10b981;
+  color: #10b981;
+}
+.user-profile-btn:hover {
+  background-color: #10b981;
+  color: white;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+/* 로그아웃 버튼 (모달 내부용) */
+.nav-btn.logout {
+  border-color: var(--danger-color);
+  color: var(--danger-color);
+}
+.nav-btn.logout:hover {
+  background-color: var(--danger-color);
+  color: white;
+}
+
+
+/* 3. 메인 컨테이너 */
 .terminal-container {
   width: 100%;
   min-height: 100vh;
@@ -29,16 +95,14 @@ html, body, #root {
   justify-content: center;
   padding: 40px;
   box-sizing: border-box;
-  position: relative;
   
-  /* 배경 패턴 */
   background-image: 
     linear-gradient(#e5e7eb 1px, transparent 1px),
     linear-gradient(90deg, #e5e7eb 1px, transparent 1px);
   background-size: 40px 40px;
 }
 
-/* 3. 헤더 및 텍스트 */
+/* 4. 헤더 */
 .terminal-header {
   text-align: center;
   margin-bottom: 3rem;
@@ -81,7 +145,7 @@ html, body, #root {
   margin-top: 10px;
 }
 
-/* 4. 그리드 카드 영역 */
+/* 5. 그리드 카드 */
 .grid-container {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -97,7 +161,7 @@ html, body, #root {
   border: 1px solid #e5e7eb;
   border-radius: 16px;
   padding: 2rem;
-  text-decoration: none; /* 기본 링크 밑줄 제거 */
+  text-decoration: none;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
   display: flex;
@@ -127,12 +191,7 @@ html, body, #root {
 .status-dot.green { background-color: #10b981; box-shadow: 0 0 0 2px #d1fae5; }
 .status-dot.red { background-color: var(--danger-color); }
 
-.level-title {
-  color: var(--text-main);
-  font-size: 1.5rem;
-  font-weight: 800;
-  margin: 0.5rem 0;
-}
+.level-title { font-size: 1.5rem; font-weight: 800; color: var(--text-main); margin: 0.5rem 0; }
 .hacker-card:not(.locked):hover .level-title { color: var(--accent-color); }
 
 .separator { height: 2px; background-color: #f3f4f6; margin: 1rem 0; width: 100%; }
@@ -146,28 +205,26 @@ html, body, #root {
   padding: 8px 16px;
   border-radius: 8px;
   font-family: var(--font-mono);
-  font-size: 0.8rem;
   font-weight: bold;
-  transition: 0.2s;
+  font-size: 0.8rem;
 }
 .hacker-card:not(.locked):hover .execute-cmd { background-color: var(--accent-color); color: white; }
 
-/* 잠긴 카드 스타일 */
+/* 잠긴 카드 */
 .hacker-card.locked {
   background-color: #f9fafb;
   border: 1px dashed #d1d5db;
   cursor: not-allowed;
-  box-shadow: none;
 }
 .hacker-card.locked .level-title,
 .hacker-card.locked .level-subtitle,
 .hacker-card.locked .level-desc { color: #9ca3af; }
 .hacker-card.locked .status-dot.red { background-color: #d1d5db; box-shadow: none; }
-.lock-icon { font-size: 1.2rem; color: #9ca3af; text-align: center; margin: 2rem 0; font-weight: bold; }
+.lock-icon { font-size: 1.2rem; text-align: center; margin: 2rem 0; color: #9ca3af; font-weight: bold; }
 .hacker-card.locked:hover { background-color: #fef2f2; border-color: var(--danger-color); }
 .hacker-card.locked:hover .lock-icon { color: var(--danger-color); }
 
-/* 5. 미디어 쿼리 (닫는 괄호 확인 필수!) */
+/* 6. 모바일 대응 */
 @media (max-width: 1024px) {
   .grid-container {
     grid-template-columns: 1fr;
@@ -175,58 +232,77 @@ html, body, #root {
   .glitch-title {
     font-size: 2.5rem;
   }
-} 
-/* ⬆️ 여기가 중요합니다. 이 닫는 괄호 '}'가 없으면 아래 코드는 무시됩니다. */
-
-
-/* 6. ⚡️ 네비게이션 버튼 (여기가 적용 안되던 부분) */
-.top-nav {
-  position: fixed !important; /* 강제 적용 */
-  top: 25px;
-  right: 30px;
-  display: flex;
-  gap: 15px;      /* 버튼 사이 간격 */
-  z-index: 9999;
 }
 
-.nav-btn {
-  background-color: rgba(255, 255, 255, 0.9);
-  border: 2px solid #2563eb;
-  color: #2563eb;
-  padding: 8px 24px;
-  font-family: 'Courier New', Courier, monospace;
+/* 7. 🔹 모달창 스타일 (새로 추가됨) */
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+  backdrop-filter: blur(4px);
+}
+
+.modal-content {
+  width: 90%;
+  max-width: 450px;
+  background-color: white;
+  animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  /* hacker-card 스타일을 상속받으므로 추가 스타일만 정의 */
+}
+
+.form-section {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 25px;
+  text-align: left;
+}
+
+.form-section label {
   font-weight: bold;
   font-size: 0.9rem;
-  cursor: pointer;
-  text-decoration: none; /* 밑줄 제거 */
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  color: var(--text-sub);
+}
+
+.hacker-input {
+  padding: 10px;
+  border: 2px solid #e5e7eb;
   border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: 1rem;
 }
 
-.nav-btn:hover {
-  background-color: #2563eb;
-  color: white;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+.hacker-input:focus {
+  outline: none;
+  border-color: var(--accent-color);
+  background-color: #f0f9ff;
 }
 
-/* 회원가입 버튼 */
-.nav-btn.signup {
-  background-color: #2563eb;
-  color: white;
-}
-.nav-btn.signup:hover {
-  background-color: #1d4ed8;
+.modal-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
-/* 로그아웃 버튼 */
-.nav-btn.logout {
-  border-color: #ef4444;
-  color: #ef4444;
+.modal-actions button {
+  width: 100%;
 }
-.nav-btn.logout:hover {
-  background-color: #ef4444;
-  color: white;
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  font-weight: bold;
+  cursor: pointer;
+  color: var(--text-sub);
+}
+.close-btn:hover { color: var(--danger-color); }
+
+@keyframes popIn {
+  from { transform: scale(0.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
 }
