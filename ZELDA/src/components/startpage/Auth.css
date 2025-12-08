@@ -1,0 +1,124 @@
+.auth-wrapper {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--bg-color);
+    background-image: 
+      linear-gradient(#e5e7eb 1px, transparent 1px),
+      linear-gradient(90deg, #e5e7eb 1px, transparent 1px);
+    background-size: 40px 40px;
+    padding: 20px;
+    box-sizing: border-box;
+  }
+  
+  /* 폼 컨테이너: StartPage의 hacker-card 스타일 계승 */
+  .auth-form-container {
+    background-color: var(--card-bg);
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    padding: 2.5rem;
+    width: 100%;
+    max-width: 420px; /* 로그인창은 너무 넓지 않게 */
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: transform 0.3s ease;
+  }
+  
+  .auth-form-container:hover {
+    transform: translateY(-5px);
+    border-color: var(--accent-color);
+    box-shadow: 0 20px 25px -5px rgba(37, 99, 235, 0.15);
+  }
+  
+  .auth-form-container h2 {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--text-main);
+    margin-bottom: 2rem;
+    letter-spacing: -1px;
+  }
+  
+  /* 입력 필드 스타일링 */
+  .input-group {
+    text-align: left;
+    margin-bottom: 1.2rem;
+  }
+  
+  .input-group label {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-sub);
+    margin-bottom: 0.5rem;
+  }
+  
+  .input-group input {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    font-family: var(--font-tech);
+    font-size: 1rem;
+    transition: all 0.2s;
+    box-sizing: border-box;
+    background-color: #f9fafb;
+  }
+  
+  .input-group input:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    background-color: #ffffff;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  }
+  
+  /* 버튼 스타일 (StartPage의 execute-cmd 확장) */
+  button[type="submit"] {
+    width: 100%;
+    padding: 1rem;
+    margin-top: 1rem;
+    background-color: var(--text-main); /* 기본 검정 */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  button[type="submit"]:hover:not(:disabled) {
+    background-color: var(--accent-color); /* 호버 시 파란색 */
+  }
+  
+  button:disabled {
+    background-color: #d1d5db;
+    cursor: not-allowed;
+  }
+  
+  /* 전환 텍스트 */
+  .switch-text {
+    margin-top: 1.5rem;
+    font-size: 0.9rem;
+    color: var(--text-sub);
+  }
+  
+  .switch-text span {
+    color: var(--accent-color);
+    font-weight: bold;
+    cursor: pointer;
+    margin-left: 5px;
+  }
+  
+  .switch-text span:hover {
+    text-decoration: underline;
+  }
+  
+  .error-msg {
+    color: var(--danger-color);
+    font-size: 0.85rem;
+    margin-top: -0.5rem;
+    margin-bottom: 1rem;
+    text-align: left;
+  }
