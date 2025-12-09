@@ -48,17 +48,15 @@ export const signupAPI = async (userInfo) => {
 
     const checkRes = await fetch(url);
 
-  
+    
     if (checkRes.status === 404) {
        console.log("이메일 중복 없음 (404 확인)"); 
     } else {
        const data = await checkRes.json();
        
-       // 데이터가 배열이고 내용이 있으면 중복 에러 발생
        if (Array.isArray(data) && data.length > 0) {
           throw new Error("이미 존재하는 이메일입니다.");
        }
-      
     }
 
     // --- [2단계] 회원가입 저장 ---
