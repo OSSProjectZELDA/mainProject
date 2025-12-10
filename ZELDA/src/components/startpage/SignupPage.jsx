@@ -3,6 +3,9 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom'; // 1. 페이지 이동을 위한 훅 가져오기
 import { signupAPI } from './MockApi';
 import './Auth.css';
+import { SHA256 } from 'crypto-js';
+import { enc } from 'crypto-js';
+
 
 const SignupPage = () => { // props(onSwitchToLogin) 제거
   const navigate = useNavigate(); // 2. 이동 함수 생성
@@ -20,6 +23,7 @@ const SignupPage = () => { // props(onSwitchToLogin) 제거
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (formData.password !== formData.confirmPassword) {
@@ -31,9 +35,13 @@ const SignupPage = () => { // props(onSwitchToLogin) 제거
     setError('');
 
     try {
+      const salt = Math.random().toString(36).substring(2);
+      const hashedPassword = SHA256(formData.password + salt).toString(enc.Hex);
+
       await signupAPI({ 
         email: formData.email, 
-        password: formData.password, 
+        hashedPassword, 
+        salt, 
         name: formData.name 
       });
       alert('회원가입 성공! 로그인 페이지로 이동합니다.');
@@ -72,7 +80,8 @@ const SignupPage = () => { // props(onSwitchToLogin) 제거
             />
           </div>
           <div className="input-group">
-            <label htmlFor="password">비밀번호</label>
+            <label htmlFor="password"
+            >비밀번호</label>
             <input 
               type="password" 
               id="password"
