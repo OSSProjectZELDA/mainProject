@@ -17,7 +17,7 @@ import Level2Game from '../pages/level2/Level2Game';
 import Level3Game from '../pages/level3/Level3Game';
 import AdminPage from '../pages/level1/AdminPage';
 
-import AdminPage from '../pages/finalpage/FianlPage';
+import FinalPage from '../pages/finalpage/FinalPage';
 
 const AppRouter = () => {
   const { user } = useAuth(); // 로그인 여부 확인
