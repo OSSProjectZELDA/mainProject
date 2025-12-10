@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext'; // 훅 가져오기
 import { loginAPI } from './MockApi'; // 파일명 대소문자 확인 (mockApi.js인지 MockApi.js인지)
 import './Auth.css';
+import { SHA256 } from 'crypto-js';
+import { enc } from 'crypto-js';
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -12,23 +14,40 @@ const LoginPage = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(''); // 기존 에러 초기화
 
     try {
-      const response = await loginAPI(email, password);
-      
-      // 1. 전역 상태에 로그인 정보 업데이트
-      login(response.user); 
-      
-      // 2. 메인 페이지로 이동
-      navigate('/'); 
+      // 1. 이메일로 사용자 정보 가져오기
+      const user = await loginAPI(email);
+
+      // 2. 비밀번호 검증
+      if (user && user.hashedPassword && user.salt) {
+        const hashedInput = SHA256(password + user.salt).toString(enc.Hex);
+        
+        if (hashedInput === user.hashedPassword) {
+          // 3. 전역 상태에 로그인 정보 업데이트 (보안 정보 제외)
+          const { hashedPassword, salt, ...userInfo } = user;
+          login(userInfo);
+          
+          // 4. 메인 페이지로 이동
+          navigate('/');
+        } else {
+          setError("이메일 또는 비밀번호가 일치하지 않습니다.");
+        }
+      } else {
+        setError("이메일 또는 비밀번호가 일치하지 않습니다.");
+      }
       
     } catch (err) {
       setError(err.message);
     }
   };
+
+// ... (rest of the component)
+
 
   return (
     <div className="auth-wrapper">

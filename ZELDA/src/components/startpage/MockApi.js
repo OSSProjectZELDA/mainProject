@@ -1,10 +1,9 @@
 const API_URL = 'https://69363e59f8dc350aff30362b.mockapi.io/users'; 
 
-export const loginAPI = async (email, password) => {
+export const loginAPI = async (email) => {
   try {
     const url = new URL(API_URL);
     url.searchParams.append('email', email);
-    url.searchParams.append('password', password);
     
     const response = await fetch(url, {
       method: 'GET',
@@ -24,16 +23,9 @@ export const loginAPI = async (email, password) => {
     if (!Array.isArray(data) || data.length === 0) {
       throw new Error("이메일 또는 비밀번호가 일치하지 않습니다.");
     }
-
-    const exactUser = data.find(u => u.password === password);
-    if (!exactUser) {
-       throw new Error("이메일 또는 비밀번호가 일치하지 않습니다.");
-    }
-
-    return { 
-      success: true, 
-      user: { email: exactUser.email, name: exactUser.name, id: exactUser.id } 
-    };
+    
+    // 이메일이 고유하다고 가정하고 첫 번째 사용자 반환
+    return data[0];
 
   } catch (error) {
     throw { success: false, message: error.message };
@@ -65,7 +57,8 @@ export const signupAPI = async (userInfo) => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         email: userInfo.email,
-        password: userInfo.password,
+        hashedPassword: userInfo.hashedPassword,
+        salt: userInfo.salt,
         name: userInfo.name,
       }),
     });

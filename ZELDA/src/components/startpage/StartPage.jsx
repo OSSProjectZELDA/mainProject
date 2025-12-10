@@ -4,9 +4,14 @@ import { useAuth } from '../../context/AuthContext';
 import UserDetailModal from './UserDetailModal'; 
 import './StartPage.css';
 
-// 🔹 [새로 추가된 컴포넌트] 유저 아바타 (이름 첫 글자 표시)
+const hashString = async (message) => {
+  const msgBuffer = new TextEncoder().encode(message);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+};
+
 const UserAvatar = ({ name, onClick }) => {
-  // 이름이 있으면 첫 글자를 대문자로, 없으면 'U'
   const initial = name ? name.charAt(0).toUpperCase() : 'U';
   
   return (
@@ -19,7 +24,7 @@ const UserAvatar = ({ name, onClick }) => {
 };
 
 function StartPage() {
-  const { user } = useAuth(); // 로그아웃은 모달 내부에서 처리
+  const { user } = useAuth(); 
   const [isModalOpen, setIsModalOpen] = useState(false); 
   
   const [unlockedStage, setUnlockedStage] = useState(1);
@@ -53,23 +58,17 @@ function StartPage() {
   ];
 
   const handleCardClick = async (e, level) => {
-    // 1. 이미 해금된 레벨이면 클릭 시 해당 URL로 이동
     if (level.id <= unlockedStage) return;
-
-    // 2. 잠긴 레벨 클릭 방지
     e.preventDefault();
-    
-    // 3. 순서 체크
     if (level.id > unlockedStage + 1) {
       alert("⚠️ 이전 단계를 먼저 클리어하십시오.");
       return;
     }
-
-    // 4. Flag 입력 및 검증
     const input = prompt(`[SYSTEM] ${level.title} 접근 권한이 필요합니다.\n비밀번호(Flag)를 입력하십시오:`);
 
     if (input) {
       try {
+        const inputHash = await hashString(input);
         const response = await fetch(API_ENDPOINT, {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' }
@@ -80,9 +79,8 @@ function StartPage() {
         }
 
         const data = await response.json();
-        
-        // 데이터 구조에 맞춰 비밀번호 검증
-        if (data[level.id - 2] && input === data[level.id - 2].password) {
+        const targetData = data[level.id - 2];
+        if (targetData && inputHash === targetData.password) {
           alert("ACCESS GRANTED. 승인되었습니다.");
           setUnlockedStage(level.id);
         } else {
@@ -98,19 +96,14 @@ function StartPage() {
 
   return (
     <>
-      {/* 🔹 모달창 (상태에 따라 표시) */}
       {isModalOpen && <UserDetailModal onClose={() => setIsModalOpen(false)} />}
-
-      {/* 🔹 오른쪽 상단 네비게이션 */}
       <div className="top-nav">
         {user ? (
-          // 로그인 상태: 구글 스타일 아바타 표시
           <UserAvatar 
             name={user.name} 
             onClick={() => setIsModalOpen(true)} 
           />
         ) : (
-          // 비로그인 상태: 로그인/회원가입 버튼
           <>
             <Link to="/login" className="nav-btn">
               LOGIN
