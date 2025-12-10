@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import './Level1.css';
+import { useAuth } from '../../context/AuthContext';
 
 function Level1Game() { 
     const [username, setUsername] = useState('');
@@ -8,6 +9,7 @@ function Level1Game() {
     const [message, setMessage] = useState('');
     
     const navigate = useNavigate();
+    const { updateLevel } = useAuth();
 
     // 🎲 랜덤 에러 메시지 뱅크 (야무진 리스트)
     const sqlErrors = [
@@ -36,7 +38,7 @@ function Level1Game() {
         const randomIndex = Math.floor(Math.random() * errorList.length);
         return errorList[randomIndex];
     };
-const handleSubmit = (e) => {
+const handleSubmit = async (e) => {
         e.preventDefault();
         setMessage(''); 
 
@@ -57,6 +59,7 @@ const handleSubmit = (e) => {
 
         if (hasOr && hasComment && isStringInjection) {
             // 정답이면 다른 에러 체크(WAF, Syntax) 건너뛰고 바로 이동
+            await updateLevel(2);
             navigate('/admin-secret');
             return;
         }
@@ -89,6 +92,7 @@ const handleSubmit = (e) => {
         // 🚪 [일반 로그인 시도]
         // ---------------------------------------------------------
         if (username === 'admin' && password === 'real_complex_password') {
+            await updateLevel(2);
             navigate('/admin-secret');
         } else {
             setMessage("❌ Login Failed: Invalid username or password.");

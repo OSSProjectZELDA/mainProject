@@ -60,6 +60,7 @@ export const signupAPI = async (userInfo) => {
         hashedPassword: userInfo.hashedPassword,
         salt: userInfo.salt,
         name: userInfo.name,
+        level: 1, //  livelli 1로 초기화
       }),
     });
 

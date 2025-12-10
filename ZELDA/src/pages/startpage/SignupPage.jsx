@@ -1,14 +1,12 @@
 // src/components/startpage/SignupPage.jsx
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // 1. 페이지 이동을 위한 훅 가져오기
+import { useNavigate } from 'react-router-dom';
 import { signupAPI } from './MockApi';
 import './Auth.css';
-import { SHA256 } from 'crypto-js';
-import { enc } from 'crypto-js';
+import { SHA256, enc } from 'crypto-js'; // import 구문 살짝 정리
 
-
-const SignupPage = () => { // props(onSwitchToLogin) 제거
-  const navigate = useNavigate(); // 2. 이동 함수 생성
+const SignupPage = () => {
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     email: '',
@@ -23,7 +21,6 @@ const SignupPage = () => { // props(onSwitchToLogin) 제거
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (formData.password !== formData.confirmPassword) {
@@ -35,15 +32,19 @@ const SignupPage = () => { // props(onSwitchToLogin) 제거
     setError('');
 
     try {
+      // 비밀번호 암호화
       const salt = Math.random().toString(36).substring(2);
       const hashedPassword = SHA256(formData.password + salt).toString(enc.Hex);
 
+      // API 호출
       await signupAPI({ 
         email: formData.email, 
         hashedPassword, 
         salt, 
-        name: formData.name 
+        name: formData.name,
+        level: 1 // 🔹 [추가됨] 신규 회원은 레벨 1부터 시작 (필요시 0으로 변경)
       });
+
       alert('회원가입 성공! 로그인 페이지로 이동합니다.');
       
       navigate('/login'); 
@@ -80,8 +81,7 @@ const SignupPage = () => { // props(onSwitchToLogin) 제거
             />
           </div>
           <div className="input-group">
-            <label htmlFor="password"
-            >비밀번호</label>
+            <label htmlFor="password">비밀번호</label>
             <input 
               type="password" 
               id="password"
