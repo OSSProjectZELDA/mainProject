@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from 'react-router-dom';
 import './Level2Game.css'; 
 
 // --- 유틸리티 ---
@@ -274,6 +275,7 @@ export default function Level2Game() {
             메모를 선택하여 내용을 확인하세요
           </div>
         )}
+        <Link to="/level2" className="sim-exit-btn">🚪 이론으로 돌아가기</Link>
       </div>
 
       {/* 3. 새 메모 모달 */}

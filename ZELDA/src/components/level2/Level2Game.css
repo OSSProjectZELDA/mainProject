@@ -407,3 +407,16 @@
     justify-content: flex-end;
     gap: 8px;
   }
+
+  .sim-exit-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #333;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 30px;
+    text-decoration: none;
+    font-size: 12px;
+    opacity: 0.8;
+  }
