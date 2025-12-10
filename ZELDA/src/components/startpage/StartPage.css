@@ -1,15 +1,16 @@
 :root {
-  --bg-color: #f3f4f6;
+  --bg-color: #f3f4f1;
   --text-main: #111827;
   --text-sub: #6b7280;
   --accent-color: #2563eb;
   --card-bg: #ffffff;
-  --danger-color: #ef4444;
   --font-tech: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   --font-mono: 'Courier New', Courier, monospace;
+  
+  --safe-green: #10b981; 
+  --muted-danger: #f87171; 
 }
 
-/* 1. 기본 설정 */
 html, body, #root {
   margin: 0; padding: 0;
   width: 100%; height: 100%;
@@ -19,9 +20,8 @@ html, body, #root {
   overflow-x: hidden;
 }
 
-/* 2. 네비게이션 버튼 (화면 오른쪽 상단 고정) */
 .top-nav {
-  position: fixed !important; /* 강제 적용 */
+  position: fixed !important; 
   top: 25px;
   right: 30px;
   display: flex;
@@ -54,7 +54,6 @@ html, body, #root {
   box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
 }
 
-/* 회원가입 버튼 */
 .nav-btn.signup {
   background-color: var(--accent-color);
   color: white;
@@ -63,29 +62,47 @@ html, body, #root {
   background-color: #1d4ed8;
 }
 
-/* 유저 프로필 버튼 (초록색) */
-.user-profile-btn {
-  border-color: #10b981;
-  color: #10b981;
+.user-avatar-container {
+  cursor: pointer;
+  transition: transform 0.2s ease;
 }
-.user-profile-btn:hover {
-  background-color: #10b981;
+.user-avatar-container:hover {
+  transform: scale(1.05);
+}
+
+.top-nav .user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: var(--accent-color); /* 구글처럼 파란색 계열 */
   color: white;
-  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.2rem;
+  font-weight: bold;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  border: 2px solid white;
 }
 
-/* 로그아웃 버튼 (모달 내부용) */
-.nav-btn.logout {
-  border-color: var(--danger-color);
-  color: var(--danger-color);
+
+.modal-actions .nav-btn.logout {
+  border-color: var(--muted-danger);
+  color: var(--muted-danger);
 }
-.nav-btn.logout:hover {
-  background-color: var(--danger-color);
+.modal-actions .nav-btn.logout:hover {
+  background-color: var(--muted-danger);
   color: white;
 }
+.modal-actions .nav-btn.signup { 
+  background-color: var(--safe-green);
+  border-color: var(--safe-green);
+}
+.modal-actions .nav-btn.signup:hover {
+  background-color: #059669;
+}
 
 
-/* 3. 메인 컨테이너 */
 .terminal-container {
   width: 100%;
   min-height: 100vh;
@@ -102,7 +119,7 @@ html, body, #root {
   background-size: 40px 40px;
 }
 
-/* 4. 헤더 */
+
 .terminal-header {
   text-align: center;
   margin-bottom: 3rem;
@@ -145,7 +162,6 @@ html, body, #root {
   margin-top: 10px;
 }
 
-/* 5. 그리드 카드 */
 .grid-container {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -188,8 +204,8 @@ html, body, #root {
 }
 
 .status-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
-.status-dot.green { background-color: #10b981; box-shadow: 0 0 0 2px #d1fae5; }
-.status-dot.red { background-color: var(--danger-color); }
+.status-dot.green { background-color: var(--safe-green); box-shadow: 0 0 0 2px #d1fae5; }
+.status-dot.red { background-color: var(--muted-danger); }
 
 .level-title { font-size: 1.5rem; font-weight: 800; color: var(--text-main); margin: 0.5rem 0; }
 .hacker-card:not(.locked):hover .level-title { color: var(--accent-color); }
@@ -210,7 +226,6 @@ html, body, #root {
 }
 .hacker-card:not(.locked):hover .execute-cmd { background-color: var(--accent-color); color: white; }
 
-/* 잠긴 카드 */
 .hacker-card.locked {
   background-color: #f9fafb;
   border: 1px dashed #d1d5db;
@@ -221,10 +236,9 @@ html, body, #root {
 .hacker-card.locked .level-desc { color: #9ca3af; }
 .hacker-card.locked .status-dot.red { background-color: #d1d5db; box-shadow: none; }
 .lock-icon { font-size: 1.2rem; text-align: center; margin: 2rem 0; color: #9ca3af; font-weight: bold; }
-.hacker-card.locked:hover { background-color: #fef2f2; border-color: var(--danger-color); }
-.hacker-card.locked:hover .lock-icon { color: var(--danger-color); }
+.hacker-card.locked:hover { background-color: #fef2f2; border-color: var(--muted-danger); } /* 🔹 [수정] */
+.hacker-card.locked:hover .lock-icon { color: var(--muted-danger); } /* 🔹 [수정] */
 
-/* 6. 모바일 대응 */
 @media (max-width: 1024px) {
   .grid-container {
     grid-template-columns: 1fr;
@@ -234,7 +248,7 @@ html, body, #root {
   }
 }
 
-/* 7. 🔹 모달창 스타일 (새로 추가됨) */
+
 .modal-overlay {
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
@@ -251,7 +265,6 @@ html, body, #root {
   max-width: 450px;
   background-color: white;
   animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  /* hacker-card 스타일을 상속받으므로 추가 스타일만 정의 */
 }
 
 .form-section {
@@ -300,7 +313,8 @@ html, body, #root {
   cursor: pointer;
   color: var(--text-sub);
 }
-.close-btn:hover { color: var(--danger-color); }
+
+.close-btn:hover { color: var(--muted-danger); } 
 
 @keyframes popIn {
   from { transform: scale(0.9); opacity: 0; }
