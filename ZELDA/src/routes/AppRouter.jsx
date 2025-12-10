@@ -10,13 +10,14 @@ import SignupPage from '../pages/startpage/SignupPage';
 
 // 게임 페이지들
 import Level1 from '../pages/level1/Level1';
-import Level2 from '../pages/level2/Level2'
-import Level3 from '../pages/level3/Level3'
+import Level2 from '../pages/level2/Level2';
+import Level3 from '../pages/level3/Level3';
 import Level1Game from '../pages/level1/Level1Game';
-import Level2Game from '../pages/level2/Level2Game'
-import Level3Game from '../pages/level3/Level3Game' 
-import AdminPage from '../pages/level1/AdminPage'
+import Level2Game from '../pages/level2/Level2Game';
+import Level3Game from '../pages/level3/Level3Game';
+import AdminPage from '../pages/level1/AdminPage';
 
+import AdminPage from '../pages/finalpage/FianlPage';
 
 const AppRouter = () => {
   const { user } = useAuth(); // 로그인 여부 확인
@@ -39,6 +40,8 @@ const AppRouter = () => {
         <Route path="/level2Game" element={<Level2Game />} />
         <Route path="/level3" element={<Level3 />} />
         <Route path="/level3Game" element={<Level3Game />} />
+
+          <Route path="/final" element={<FinalPage />} />
       </Routes>
     </BrowserRouter>
   );
