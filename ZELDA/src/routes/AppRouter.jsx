@@ -41,7 +41,7 @@ const AppRouter = () => {
         <Route path="/level3" element={<Level3 />} />
         <Route path="/level3Game" element={<Level3Game />} />
 
-          <Route path="/final" element={<FinalPage />} />
+        <Route path="/final" element={<FinalPage />} />
       </Routes>
     </BrowserRouter>
   );
