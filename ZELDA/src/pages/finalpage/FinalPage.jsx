@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Trophy, ShieldCheck, MessageSquare, Send, Save, X, Edit2, Trash2 } from 'lucide-react';
+seongmin_feat/#26
 // ✅ [중요] 아이콘 패키지 임포트 (에러 해결됨)
 import './FinalPage.css';
 
