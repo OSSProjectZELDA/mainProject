@@ -1,181 +1,11 @@
-// // api.js
-
-// // **API 호출 실패 시 사용될 풍부한 예시 데이터 목록**
-// const MOCK_DATA = [
-//     { cur_unit: 'USD', cur_nm: '미국 달러', deal_bas_r: '1,380.00' },
-//     { cur_unit: 'JPY(100)', cur_nm: '일본 옌', deal_bas_r: '9.30' },
-//     { cur_unit: 'EUR', cur_nm: '유로', deal_bas_r: '1,490.00' },
-//     { cur_unit: 'CNH', cur_nm: '위안화', deal_bas_r: '190.00' },
-//     { cur_unit: 'GBP', cur_nm: '영국 파운드', deal_bas_r: '1,700.50' },
-//     { cur_unit: 'CAD', cur_nm: '캐나다 달러', deal_bas_r: '1,050.20' },
-//     { cur_unit: 'AUD', cur_nm: '호주 달러', deal_bas_r: '950.00' },
-//     { cur_unit: 'CHF', cur_nm: '스위스 프랑', deal_bas_r: '1,550.00' },
-//     { cur_unit: 'HKD', cur_nm: '홍콩 달러', deal_bas_r: '175.00' },
-//     { cur_unit: 'SGD', cur_nm: '싱가포르 달러', deal_bas_r: '1,010.80' },
-//     { cur_unit: 'NZD', cur_nm: '뉴질랜드 달러', deal_bas_r: '880.00' },
-//     { cur_unit: 'THB', cur_nm: '태국 바트', deal_bas_r: '35.50' },
-//     { cur_unit: 'VND', cur_nm: '베트남 동', deal_bas_r: '0.05' },
-// ];
-
-// const API_KEY = 'bEuMBC96ilXgr5ohrSKVLUWzi4FakoAT'; // 발급된 인증키 반영 (실제 호출 시 필요)
-
-// /**
-//  * 실시간 환율 데이터를 조회합니다.
-//  * API 호출이 실패하거나 데이터가 없으면 Mock Data를 반환합니다.
-//  * * @returns {Promise<Array>} 환율 데이터 목록
-//  */
-// export const fetchExchangeRateList = async () => {
-//     const today = new Date().toISOString().slice(0, 10).replace(/-/g, '');
-//     const url = `https://www.koreaexim.go.kr/site/program/financial/exchangeJSON?authkey=${API_KEY}&searchdate=${today}&data=AP01`;
-
-//     try {
-//         const response = await fetch(url);
-        
-//         // HTTP 응답 코드가 200번대가 아니면 에러로 처리
-//         if (!response.ok) {
-//             throw new Error(`HTTP Error: ${response.status}`);
-//         }
-
-//         const data = await response.json();
-        
-//         // 데이터가 비어 있거나, API 오류 코드(result: 4)가 포함된 경우 Mock Data 사용
-//         if (!Array.isArray(data) || data.length === 0 || (data.length > 0 && data[0].result === 4)) {
-//             console.warn("API 호출 성공했으나, 데이터가 없거나 오류 코드가 반환됨. Mock Data 사용.");
-//             return MOCK_DATA;
-//         }
-        
-//         // List 기능: 성공 시 전체 데이터를 반환
-//         return data;
-        
-//     } catch (err) {
-//         // API 호출 자체에서 오류 발생 시 (네트워크, 서버 오류 등)
-//         console.error("API 호출 실패:", err);
-//         return MOCK_DATA; // Mock Data 반환
-//     }
-// };
-
-// /**
-//  * 주어진 검색어로 환율 데이터를 필터링합니다. (Searching 기능)
-//  * 이 함수는 클라이언트 측 필터링을 위해 존재합니다.
-//  * * @param {Array} data - 전체 환율 데이터 목록
-//  * @param {string} searchTerm - 검색어 (통화명 또는 통화코드)
-//  * @returns {Array} 필터링된 데이터 목록
-//  */
-// export const searchExchangeRate = (data, searchTerm) => {
-//     if (!searchTerm) return data; // 검색어가 없으면 전체 반환
-
-//     const search = searchTerm.toUpperCase();
-//     return data.filter(item => {
-//         const matchesSearch = (item.cur_nm && item.cur_nm.toUpperCase().includes(search)) || 
-//                               (item.cur_unit && item.cur_unit.toUpperCase().includes(search));
-//         return matchesSearch;
-//     });
-// };
-
-// api.js (Base Currency: USD 적용)
-
-// // **API 호출 실패 시 사용될 풍부한 예시 데이터 목록**
-// const MOCK_DATA = [
-//     { cur_unit: 'USD', cur_nm: '미국 달러', deal_bas_r: '1,380.00' },
-//     // ... (MOCK_DATA 유지) ...
-// ];
-
-// // 🔑 ExchangeRate-API 키 적용
-// const API_KEY = '802652e2dc2de4a8408dc9d7'; 
-
-// /**
-//  * ExchangeRate-API를 사용하여 환율 데이터를 조회하고, 
-//  * Level3Game.js 형식(통화 단위 당 KRW)에 맞게 변환하여 반환합니다.
-//  * **기준 통화: USD**
-//  * @returns {Promise<Array>} 환율 데이터 목록
-//  */
-// export const fetchExchangeRateList = async () => {
-//     // 🔑 사용자님의 요청대로 기준 통화를 USD로 설정
-//     const url = `https://v6.exchangerate-api.com/v6/${API_KEY}/latest/USD`;
-
-//     try {
-//         const response = await fetch(url);
-        
-//         if (!response.ok) { 
-//             console.error(`API 호출 실패: HTTP Error ${response.status}`);
-//             throw new Error(`API Request failed with status: ${response.status}`);
-//         }
-
-//         const data = await response.json();
-        
-//         if (data.result === 'success' && data.conversion_rates) {
-//             const rates = data.conversion_rates;
-            
-//             // 🚨 [데이터 변환 로직]
-//             // rates['KRW']는 1 USD당 KRW 가격입니다. (예: 1380)
-//             const usdToKrwRate = rates['KRW']; 
-//             if (!usdToKrwRate) {
-//                  console.error("API 응답에 KRW 환율 정보가 없습니다.");
-//                  return MOCK_DATA;
-//             }
-
-//             const formattedData = Object.keys(rates).map(code => {
-//                 const rateValue = rates[code]; // 1 USD당 통화 단위
-                
-//                 let krwRatePerUnit;
-                
-//                 if (code === 'USD') {
-//                     // USD는 1달러 당 KRW 환율 (예: 1380)
-//                     krwRatePerUnit = usdToKrwRate;
-//                 } else {
-//                     // 다른 통화(예: EUR)의 경우
-//                     // 1 EUR = (1 USD / rateValue [EUR]) * usdToKrwRate
-//                     // 1 EUR 당 KRW 가치 = (1 / (1 USD 당 EUR 값)) * (1 USD 당 KRW 값)
-//                     krwRatePerUnit = usdToKrwRate / rateValue;
-//                 }
-                
-//                 return {
-//                     cur_unit: code, 
-//                     cur_nm: `${code} (KRW 환산)`, 
-//                     // 소수점 2자리까지 표시하고 콤마 포맷팅
-//                     deal_bas_r: krwRatePerUnit.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ","),
-//                 };
-//             // KRW 자체와 환율 데이터가 지나치게 큰 VND 데이터 제외 (선택적 필터링 유지)
-//             }).filter(item => item.cur_unit !== 'KRW' && item.cur_unit !== 'VND'); 
-
-//             console.log("ExchangeRate API Data loaded successfully with USD Base.");
-//             return formattedData;
-//         }
-
-//         console.warn("API 호출 성공했으나, 데이터 형식이 예상과 다름. Mock Data 사용.");
-//         return MOCK_DATA;
-        
-//     } catch (err) {
-//         console.error("API 호출 실패:", err);
-//         return MOCK_DATA;
-//     }
-// };
-
-// // searchExchangeRate 함수는 Level3Game.js에서 사용하므로 그대로 유지합니다.
-// export const searchExchangeRate = (data, searchTerm) => {
-//     if (!searchTerm) return data; 
-//     const search = searchTerm.toUpperCase();
-//     return data.filter(item => {
-//         const matchesSearch = (item.cur_nm && item.cur_nm.toUpperCase().includes(search)) || 
-//                               (item.cur_unit && item.cur_unit.toUpperCase().includes(search));
-//         return matchesSearch;
-//     });
-// };
-
-
-// api.js
-
-// 🚨 [통화 코드와 나라 이름 매핑 테이블]
 // API 응답에는 통화명이 없으므로, 자주 쓰이는 코드와 스크린샷에 포함된 코드를 위주로 작성했습니다.
 const CURRENCY_NAMES = {
-    // ----------------------------------------------------
     // 자주 쓰이는 주요 통화
     "USD": "미국 달러", "JPY": "일본 엔", "EUR": "유로",
     "GBP": "영국 파운드", "CAD": "캐나다 달러", "AUD": "호주 달러",
     "CHF": "스위스 프랑", "HKD": "홍콩 달러", "SGD": "싱가포르 달러", 
     "CNH": "역외 위안화", "CNY": "중국 위안", "NZD": "뉴질랜드 달러",
     "THB": "태국 바트", "VND": "베트남 동", "ZAR": "남아공 랜드",
-    // ----------------------------------------------------
     // JSON 응답에 포함된 통화 (누락분 보강)
     "AED": "아랍에미리트 디르함", "AFN": "아프가니스탄 아프가니", "ALL": "알바니아 레크",
     "AMD": "아르메니아 드람", "ANG": "네덜란드령 안틸레스 길더", "AOA": "앙골라 콴자",
@@ -227,14 +57,14 @@ const CURRENCY_NAMES = {
     "YER": "예멘 리얄", "ZMW": "잠비아 콰차", "ZWG": "짐바브웨 달러 (구)",
     "ZWL": "짐바브웨 달러"
 };
-// 🔑 ExchangeRate-API 키 적용
+// ExchangeRate-API 키 적용
 const API_KEY = '802652e2dc2de4a8408dc9d7'; 
 
 /**
- * ExchangeRate-API를 사용하여 환율 데이터를 조회하고, 
- * Level3Game.js 형식(통화 단위 당 KRW)에 맞게 변환하여 반환합니다.
- * **기준 통화: USD**
- * @returns {Promise<Array>} 환율 데이터 목록
+ ExchangeRate-API를 사용하여 환율 데이터를 조회하고, 
+ Level3Game.js 형식(통화 단위 당 KRW)에 맞게 변환하여 반환합니다.
+ 기준 통화: USD**
+ @returns {Promise<Array>} 환율 데이터 목록
  */
 export const fetchExchangeRateList = async () => {
     // 기준 통화를 USD로 설정
@@ -300,11 +130,11 @@ export const fetchExchangeRateList = async () => {
 };
 
 /**
- * 주어진 검색어로 환율 데이터를 필터링합니다. (Searching 기능)
- * 이 함수는 클라이언트 측 필터링을 위해 존재합니다.
- * @param {Array} data - 전체 환율 데이터 목록
- * @param {string} searchTerm - 검색어 (통화명 또는 통화코드)
- * @returns {Array} 필터링된 데이터 목록
+ 주어진 검색어로 환율 데이터를 필터링합니다. (Searching 기능)
+ 이 함수는 클라이언트 측 필터링을 위해 존재합니다.
+ @param {Array} data - 전체 환율 데이터 목록
+ @param {string} searchTerm - 검색어 (통화명 또는 통화코드)
+ @returns {Array} 필터링된 데이터 목록
  */
 export const searchExchangeRate = (data, searchTerm) => {
     if (!searchTerm) return data; // 검색어가 없으면 전체 반환
