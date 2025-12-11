@@ -1,10 +1,10 @@
 // src/components/startpage/StartPage.jsx
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom'; 
 import { useAuth } from '../../context/AuthContext'; // Context Hook
-import UserDetailModal from './UserDetailModal'; 
+import Header from '../../components/header/Header.jsx'; // Header 컴포넌트
 import './StartPage.css';
 
+// hashString 함수는 그대로 유지
 const hashString = async (message) => {
   const msgBuffer = new TextEncoder().encode(message);
   const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
@@ -12,23 +12,21 @@ const hashString = async (message) => {
   return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
 };
 
-const UserAvatar = ({ name, onClick }) => {
-  const initial = name ? name.charAt(0).toUpperCase() : 'U';
-  
-  return (
-    <div className="user-avatar-container" onClick={onClick} title="프로필 설정">
-      <div className="user-avatar">
-        {initial}
-      </div>
-    </div>
-  );
-};
-
 function StartPage() {
   const { user, updateLevel } = useAuth(); 
-  const [isModalOpen, setIsModalOpen] = useState(false); 
+  
+  // Header 내부에서 처리하므로 StartPage에서는 Modal 관련 상태가 필요 없습니다.
+  // const [isModalOpen, setIsModalOpen] = useState(false);  <-- 삭제됨
   
   const [unlockedStage, setUnlockedStage] = useState(1);
+
+  useEffect(() => {
+    document.body.classList.add('startpage-body');
+    return () => {
+        document.body.classList.remove('startpage-body');
+    };
+  }, []);
+
   useEffect(() => {
     if (user && user.level) {
       setUnlockedStage(user.level);
@@ -67,13 +65,10 @@ function StartPage() {
   ];
 
   const handleCardClick = async (e, level) => {
-    // 이미 해금된 레벨이면 페이지 이동 (기본 동작)
     if (level.id <= unlockedStage) return;
     
-    // 클릭 기본 동작 막기 (잠긴 상태)
     e.preventDefault();
 
-    // 순차적 진행 강제 (1 -> 3 점프 불가)
     if (level.id > unlockedStage + 1) {
       alert("⚠️ 이전 단계를 먼저 클리어하십시오.");
       return;
@@ -94,17 +89,14 @@ function StartPage() {
         }
 
         const data = await response.json();
-        // MockAPI 구조상 data 배열 인덱스로 접근 (Level 2의 비번은 data[0] 등 상황에 맞춰 조정 필요)
-        // 여기서는 level.id가 2일 때 -> data[0] (Level 1을 깨고 얻은 비번)을 검증한다고 가정
         const targetData = data[level.id - 2]; 
 
         if (targetData && inputHash === targetData.password) {
           alert("ACCESS GRANTED. 승인되었습니다.");
           
-          // 4. 정답을 맞추면 로컬 UI 업데이트 + 서버(DB) 업데이트 동시에 실행
           const newLevel = level.id;
-          setUnlockedStage(newLevel); // 화면 즉시 반영
-          await updateLevel(newLevel); // 서버 및 로컬스토리지 영구 저장
+          setUnlockedStage(newLevel); 
+          await updateLevel(newLevel); 
 
         } else {
           alert("ACCESS DENIED. 비밀번호가 일치하지 않습니다.");
@@ -119,24 +111,13 @@ function StartPage() {
 
   return (
     <>
-      {isModalOpen && <UserDetailModal onClose={() => setIsModalOpen(false)} />}
-      <div className="top-nav">
-        {user ? (
-          <UserAvatar 
-            name={user.name} 
-            onClick={() => setIsModalOpen(true)} 
-          />
-        ) : (
-          <>
-            <Link to="/login" className="nav-btn">
-              LOGIN
-            </Link>
-            <Link to="/signup" className="nav-btn signup">
-              SIGN UP
-            </Link>
-          </>
-        )}
-      </div>
+      {/* 이곳에 Header를 배치합니다. 
+         Header 내부에서 Login/Signup/프로필 모달을 모두 처리합니다.
+         level과 user 정보를 넘겨줍니다.
+      */}
+      <Header user={user} />
+
+      {/* 기존 top-nav 및 Modal 관련 코드는 Header로 이동했으므로 여기서 삭제했습니다. */}
 
       <div className="terminal-container">
         <div className="overlay-scanline"></div>
@@ -146,7 +127,6 @@ function StartPage() {
             &gt; SYSTEM_BOOT_SEQUENCE_INIT... OK<br/>
             &gt; CONNECTING_TO_AUTH_SERVER... ESTABLISHED<br/>
             &gt; USER_IDENTITY: {user ? user.name : "GUEST_USER"}<br/>
-            {/* 5. 현재 레벨 표시도 unlockedStage 상태 사용 */}
             &gt; CURRENT_ACCESS_LEVEL: {unlockedStage} / 3
           </p>
           <h1 className="glitch-title" data-text="CYBER WARGAME">CYBER WARGAME</h1>
@@ -155,7 +135,6 @@ function StartPage() {
 
         <main className="grid-container">
           {gameLevels.map((level) => {
-            // 6. 잠금 여부 판단 로직
             const isLocked = level.id > unlockedStage;
 
             return (

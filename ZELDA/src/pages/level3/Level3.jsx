@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import './Level3.css'; // 통합 CSS 파일 사용
+import Header from '../../components/header/Header.jsx';
+import { useAuth } from '../../context/AuthContext';
 
 function Level3() { 
     const [activeSection, setActiveSection] = useState('intro');
     const [balance, setBalance] = useState(1000000); // 100만원
     const [msg, setMsg] = useState("정상 로그인 상태");
+    const { user } = useAuth();
 
     const handleNavClick = (sectionId) => {
         setActiveSection(sectionId);
@@ -26,13 +29,8 @@ function Level3() {
 
     return (
         <div>
-            {/* 상단바 */}
-            <header className="hacking-header">
-                <h1 style={{ margin: 0, fontSize: '1.2rem', color: '#1e293b', fontWeight: '800' }}>
-                    Hacking Lab <span style={{fontWeight:'400', color:'#94a3b8'}}>| Level 3</span>
-                </h1>
-                <Link to="/" style={{ textDecoration: 'none', color: '#64748b', fontSize:'0.9rem' }}>Exit</Link>
-            </header>
+            {/* 헤드 */}
+            <Header level={3} user = {user}/>
             
             <div className="theory-container">
                 {/* 사이드바 */}

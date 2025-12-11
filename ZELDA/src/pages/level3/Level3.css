@@ -3,296 +3,305 @@
 /* =========================================
    [Global] 공통 변수 및 기본 설정
    ========================================= */
-:root {
-  --primary-color: #2563eb;       
-  --primary-dark: #1e40af;
-  --bg-body: #f8fafc;             
-  --bg-panel: #ffffff;            
-  --border-color: #e2e8f0;        
-  --text-main: #1e293b;
-  --text-sub: #64748b;
+   :root {
+    --primary-color: #2563eb;       
+    --primary-dark: #1e40af;
+    --bg-body: #f8fafc;             
+    --bg-panel: #ffffff;            
+    --border-color: #e2e8f0;        
+    --text-main: #1e293b;
+    --text-sub: #64748b;
+  }
+
+html {
+  scroll-behavior: smooth;
 }
-
-body {
-  margin: 0;
-  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
-  background-color: var(--bg-body);
-  color: var(--text-main);
-  line-height: 1.6;
-}
-
-/* =========================================
-   [Part 1] 이론/학습 페이지 스타일 (Theory)
-   사용처: Level3.jsx
-   ========================================= */
-
-/* 상단 헤더 */
-.hacking-header {
-  background-color: var(--bg-panel);
-  border-bottom: 1px solid var(--border-color);
-  padding: 0 30px;
-  height: 60px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-}
-
-/* 전체 레이아웃 컨테이너 */
-.theory-container {
-  display: flex;
-  max-width: 1200px;
-  margin: 0 auto;
-  min-height: calc(100vh - 60px);
-}
-
-/* 사이드바 */
-.sidebar {
-  width: 240px;
-  flex-shrink: 0;
-  background-color: var(--bg-panel);
-  border-right: 1px solid var(--border-color);
-  position: sticky;
-  top: 60px;
-  height: calc(100vh - 60px);
-  padding: 25px 15px;
-  box-sizing: border-box;
-}
-
-.sidebar-title {
-  font-size: 0.75rem;
-  font-weight: 700;
-  color: #94a3b8;
-  margin-bottom: 12px;
-  text-transform: uppercase;
-}
-
-.sidebar-list { list-style: none; padding: 0; margin: 0; }
-
-.sidebar-link {
-  display: block;
-  text-decoration: none;
-  color: var(--text-sub);
-  padding: 8px 12px;
-  border-radius: 6px;
-  font-size: 0.9rem;
-  margin-bottom: 2px;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-.sidebar-link:hover { background-color: var(--bg-body); color: var(--primary-color); }
-.sidebar-link.active {
-  background-color: #eff6ff;
-  color: var(--primary-color);
-  font-weight: 600;
-  border-left: 3px solid var(--primary-color);
-}
-
-/* 본문 영역 */
-.content-panel {
-  flex-grow: 1;
-  padding: 40px 60px;
-  background-color: var(--bg-panel);
-}
-
-.section-title { font-size: 1.8rem; font-weight: 800; margin-bottom: 10px; margin-top: 0; }
-.section-desc { color: var(--text-sub); margin-bottom: 30px; }
-
-.sub-title1 {
-  font-size: 1.25rem;
-  font-weight: 700;
-  margin-top: 40px;
-  margin-bottom: 15px;
-  display: flex; align-items: center;
-}
-.sub-title1::before {
-  content: ''; display: inline-block; width: 4px; height: 18px;
-  background-color: var(--primary-color); margin-right: 10px; border-radius: 2px;
-}
-
-.text-body { font-size: 0.95rem; line-height: 1.7; margin-bottom: 15px; }
-
-/* 정보/실습 박스들 */
-.info-box {
-  background-color: #f8fafc;
-  border: 1px solid #e2e8f0;
-  padding: 20px;
-  border-radius: 8px;
-  margin: 20px 0;
-}
-
-.practice-box {
-  background-color: #fff;
-  border: 1px solid #cbd5e1;
-  border-radius: 10px;
-  padding: 25px;
-  margin: 25px 0;
-  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
-}
-
-/* 버튼 스타일 */
-.game-btn-sidebar {
-  display: block; margin-top: 20px; padding: 10px; font-size: 0.9rem;
-  background-color: #1e293b; color: white; text-decoration: none;
-  border-radius: 6px; font-weight: 600; text-align: center;
-  transition: background 0.2s;
-}
-.game-btn-sidebar:hover { background-color: #0f172a; }
-
-.btn-action {
-  display: inline-block; padding: 12px 30px; 
-  background-color: var(--primary-color); color: white;
-  text-decoration: none; border-radius: 6px; font-weight: 600;
-  transition: background 0.2s;
-}
-.btn-action:hover { background-color: var(--primary-dark); }
-
-/* 쿼리 뷰어 (코드 박스) */
-.query-viewer {
-  background: #0f172a; padding: 15px; border-radius: 8px; 
-  color: #e2e8f0; font-family: 'Consolas', monospace; font-size: 0.9rem;
-  border: 1px solid #334155; margin-top: 10px;
-}
-
-
-/* =========================================
-   [Part 2] 실전 게임 페이지 스타일 (Game)
-   사용처: Level3Game.jsx
-   (클래스명 충돌 방지를 위해 -l3 접미사 사용)
-   ========================================= */
-
-.game-container-l3 {
-  min-height: 100vh;
-  background-color: #f1f5f9; /* 쿨 그레이 */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-/* 은행 대시보드 카드 */
-.dashboard-card-l3 {
-  background: white;
-  width: 100%;
-  max-width: 650px;
-  border-radius: 16px;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.08);
-  overflow: hidden;
-  border: 1px solid #e2e8f0;
-  position: relative;
-}
-
-/* 은행 헤더 */
-.bank-header-l3 {
-  background: linear-gradient(135deg, #2563eb, #1e40af);
-  padding: 20px 30px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  color: white;
-}
-
-.logo-area-l3 h1 {
-  margin: 0; font-size: 1.25rem; font-weight: 700;
-  display: flex; align-items: center; gap: 10px;
-}
-
-.admin-tag-l3 {
-  background: rgba(255,255,255,0.2);
-  font-size: 0.7rem; padding: 3px 10px; border-radius: 20px; margin-left: 10px;
-  font-weight: 600; letter-spacing: 0.5px;
-}
-
-.view-source-btn-l3 {
-  background: rgba(255,255,255,0.1);
-  border: 1px solid rgba(255,255,255,0.3);
-  color: white; padding: 8px 15px; border-radius: 6px; cursor: pointer;
-  font-size: 0.85rem; transition: all 0.2s;
-}
-.view-source-btn-l3:hover { background: rgba(255,255,255,0.25); }
-
-/* 은행 컨텐츠 영역 */
-.bank-content-l3 { padding: 30px; }
-
-/* 사용자 프로필 */
-.user-profile-l3 {
-  display: flex; align-items: center; gap: 15px; margin-bottom: 25px;
-}
-.avatar-l3 {
-  width: 50px; height: 50px; background: #eff6ff; border-radius: 50%;
-  display: flex; justify-content: center; align-items: center; font-size: 1.5rem;
-}
-.info-l3 h3 { margin: 0; font-size: 1.1rem; color: #1e293b; }
-.info-l3 .role-l3 { margin: 0; font-size: 0.85rem; color: #64748b; }
-
-/* 보안 상태창 */
-.security-status-l3 {
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
-  padding: 20px;
-  margin-bottom: 20px;
-}
-
-.status-item-l3 {
-  display: flex; justify-content: space-between; align-items: center;
-  margin-bottom: 12px; font-size: 0.95rem;
-}
-.status-item-l3:last-child { margin-bottom: 0; }
-
-.label-l3 { color: #64748b; font-weight: 500; }
-
-/* 값 스타일 (난이도, 비번 등) */
-.value-l3.low { color: #ea580c; background: #fff7ed; padding: 2px 8px; border-radius: 4px; font-weight: bold; }
-.value-l3.medium { color: #d97706; background: #fffbeb; padding: 2px 8px; border-radius: 4px; font-weight: bold; }
-.value-l3.password { 
-  color: #dc2626; background: #fef2f2; padding: 2px 8px; border-radius: 4px; 
-  font-weight: bold; font-family: 'Monaco', monospace; 
-}
-
-/* 시스템 메시지 박스 */
-.system-message-l3 {
-  background: #eff6ff;
-  border-left: 4px solid #3b82f6;
-  padding: 15px;
-  border-radius: 0 8px 8px 0;
-  font-size: 0.9rem;
-  color: #1e40af;
-}
-.hint-l3 { font-size: 0.8rem; color: #94a3b8; margin-top: 5px; }
-
-/* 숨겨진 폼 (중요: 해킹 대상) */
-.hidden-security-form {
-  display: none; /* 화면엔 안 보이지만 DOM에는 존재함 (Elements 탭에서 확인 가능) */
-}
-
-/* 소스코드 모달창 */
-.modal-overlay-l3 {
-  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0,0,0,0.6); backdrop-filter: blur(3px);
-  display: flex; justify-content: center; align-items: center; z-index: 200;
-}
-.modal-box-l3 {
-  background: #1e1e1e; width: 90%; max-width: 700px;
-  border-radius: 10px; overflow: hidden; box-shadow: 0 25px 50px rgba(0,0,0,0.5);
-}
-.modal-top-l3 {
-  background: #2d2d2d; padding: 10px 20px; color: #9cdcfe;
-  display: flex; justify-content: space-between; border-bottom: 1px solid #333;
-}
-.code-block-l3 {
-  padding: 20px; color: #d4d4d4; font-family: 'Consolas', monospace; 
-  font-size: 14px; margin: 0; overflow-x: auto; line-height: 1.5;
-}
-
-/* 나가기 버튼 (플로팅) */
-.sim-exit-btn {
-  position: fixed; bottom: 20px; right: 20px;
-  background-color: #333; color: white;
-  padding: 10px 20px; border-radius: 30px;
-  text-decoration: none; font-size: 0.9rem; font-weight: 600;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-  opacity: 0.9; z-index: 9999; transition: opacity 0.3s;
-}
-.sim-exit-btn:hover { opacity: 1; background-color: #000; }
+  
+  body {
+    margin: 0;
+    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: var(--bg-body);
+    color: var(--text-main);
+    line-height: 1.6;
+    padding-top: 60px; /* Header height */
+  }
+  
+  /* =========================================
+     [Part 1] 이론/학습 페이지 스타일 (Theory)
+     사용처: Level3.jsx
+     ========================================= */
+  
+  
+  
+  /* 전체 레이아웃 컨테이너 */
+  .theory-container {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start; /* 사이드바 height stretch 방지 */
+    
+    max-width: 1200px;
+    margin: 20px auto 50px; /* 상단, 하단 마진 추가 */
+    
+  }
+  
+  /* 3. 사이드바 (Sticky) */
+  .sidebar {
+    width: 240px;
+    flex-shrink: 0;
+    background-color: var(--bg-panel);
+    border-right: 1px solid var(--border-color);
+    
+    position: -webkit-sticky;
+    position: sticky;
+    
+    top: 60px; 
+    
+    max-height: calc(100vh - 80px); 
+    overflow-y: auto;
+    
+    padding: 10px 15px 20px 0;
+    box-sizing: border-box;
+    margin-right: 20px;
+  }
+  
+  .sidebar-title {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #94a3b8;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+  }
+  
+  .sidebar-list { list-style: none; padding: 0; margin: 0; }
+  
+  .sidebar-link {
+    display: block;
+    text-decoration: none;
+    color: var(--text-sub);
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    margin-bottom: 2px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .sidebar-link:hover { background-color: var(--bg-body); color: var(--primary-color); }
+  .sidebar-link.active {
+    background-color: #eff6ff;
+    color: var(--primary-color);
+    font-weight: 600;
+    border-left: 3px solid var(--primary-color);
+  }
+  
+  /* 본문 영역 */
+  .content-panel {
+    flex-grow: 1;
+    background-color: var(--bg-panel);
+    padding: 40px;
+    border-left: 1px solid #f1f5f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    
+    overflow: visible; 
+    height: auto;
+  }
+  
+  .section-title { font-size: 1.8rem; font-weight: 800; margin-bottom: 10px; margin-top: 0; }
+  .section-desc { color: var(--text-sub); margin-bottom: 30px; }
+  
+  .sub-title1 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-top: 40px;
+    margin-bottom: 15px;
+    display: flex; align-items: center;
+  }
+  .sub-title1::before {
+    content: ''; display: inline-block; width: 4px; height: 18px;
+    background-color: var(--primary-color); margin-right: 10px; border-radius: 2px;
+  }
+  
+  .text-body { font-size: 0.95rem; line-height: 1.7; margin-bottom: 15px; }
+  
+  /* 정보/실습 박스들 */
+  .info-box {
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    padding: 20px;
+    border-radius: 8px;
+    margin: 20px 0;
+  }
+  
+  .practice-box {
+    background-color: #fff;
+    border: 1px solid #cbd5e1;
+    border-radius: 10px;
+    padding: 25px;
+    margin: 25px 0;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+  }
+  
+  /* 버튼 스타일 */
+  .game-btn-sidebar {
+    display: block; margin-top: 20px; padding: 10px; font-size: 0.9rem;
+    background-color: #1e293b; color: white; text-decoration: none;
+    border-radius: 6px; font-weight: 600; text-align: center;
+    transition: background 0.2s;
+  }
+  .game-btn-sidebar:hover { background-color: #0f172a; }
+  
+  .btn-action {
+    display: inline-block; padding: 12px 30px; 
+    background-color: var(--primary-color); color: white;
+    text-decoration: none; border-radius: 6px; font-weight: 600;
+    transition: background 0.2s;
+  }
+  .btn-action:hover { background-color: var(--primary-dark); }
+  
+  /* 쿼리 뷰어 (코드 박스) */
+  .query-viewer {
+    background: #0f172a; padding: 15px; border-radius: 8px; 
+    color: #e2e8f0; font-family: 'Consolas', monospace; font-size: 0.9rem;
+    border: 1px solid #334155; margin-top: 10px;
+  }
+  
+  
+  /* =========================================
+     [Part 2] 실전 게임 페이지 스타일 (Game)
+     사용처: Level3Game.jsx
+     (클래스명 충돌 방지를 위해 -l3 접미사 사용)
+     ========================================= */
+  
+  .game-container-l3 {
+    min-height: 100vh;
+    background-color: #f1f5f9; /* 쿨 그레이 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  /* 은행 대시보드 카드 */
+  .dashboard-card-l3 {
+    background: white;
+    width: 100%;
+    max-width: 650px;
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+    overflow: hidden;
+    border: 1px solid #e2e8f0;
+    position: relative;
+  }
+  
+  /* 은행 헤더 */
+  .bank-header-l3 {
+    background: linear-gradient(135deg, #2563eb, #1e40af);
+    padding: 20px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: white;
+  }
+  
+  .logo-area-l3 h1 {
+    margin: 0; font-size: 1.25rem; font-weight: 700;
+    display: flex; align-items: center; gap: 10px;
+  }
+  
+  .admin-tag-l3 {
+    background: rgba(255,255,255,0.2);
+    font-size: 0.7rem; padding: 3px 10px; border-radius: 20px; margin-left: 10px;
+    font-weight: 600; letter-spacing: 0.5px;
+  }
+  
+  .view-source-btn-l3 {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.3);
+    color: white; padding: 8px 15px; border-radius: 6px; cursor: pointer;
+    font-size: 0.85rem; transition: all 0.2s;
+  }
+  .view-source-btn-l3:hover { background: rgba(255,255,255,0.25); }
+  
+  /* 은행 컨텐츠 영역 */
+  .bank-content-l3 { padding: 30px; }
+  
+  /* 사용자 프로필 */
+  .user-profile-l3 {
+    display: flex; align-items: center; gap: 15px; margin-bottom: 25px;
+  }
+  .avatar-l3 {
+    width: 50px; height: 50px; background: #eff6ff; border-radius: 50%;
+    display: flex; justify-content: center; align-items: center; font-size: 1.5rem;
+  }
+  .info-l3 h3 { margin: 0; font-size: 1.1rem; color: #1e293b; }
+  .info-l3 .role-l3 { margin: 0; font-size: 0.85rem; color: #64748b; }
+  
+  /* 보안 상태창 */
+  .security-status-l3 {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  
+  .status-item-l3 {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 12px; font-size: 0.95rem;
+  }
+  .status-item-l3:last-child { margin-bottom: 0; }
+  
+  .label-l3 { color: #64748b; font-weight: 500; }
+  
+  /* 값 스타일 (난이도, 비번 등) */
+  .value-l3.low { color: #ea580c; background: #fff7ed; padding: 2px 8px; border-radius: 4px; font-weight: bold; }
+  .value-l3.medium { color: #d97706; background: #fffbeb; padding: 2px 8px; border-radius: 4px; font-weight: bold; }
+  .value-l3.password { 
+    color: #dc2626; background: #fef2f2; padding: 2px 8px; border-radius: 4px; 
+    font-weight: bold; font-family: 'Monaco', monospace; 
+  }
+  
+  /* 시스템 메시지 박스 */
+  .system-message-l3 {
+    background: #eff6ff;
+    border-left: 4px solid #3b82f6;
+    padding: 15px;
+    border-radius: 0 8px 8px 0;
+    font-size: 0.9rem;
+    color: #1e40af;
+  }
+  .hint-l3 { font-size: 0.8rem; color: #94a3b8; margin-top: 5px; }
+  
+  /* 숨겨진 폼 (중요: 해킹 대상) */
+  .hidden-security-form {
+    display: none; /* 화면엔 안 보이지만 DOM에는 존재함 (Elements 탭에서 확인 가능) */
+  }
+  
+  /* 소스코드 모달창 */
+  .modal-overlay-l3 {
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.6); backdrop-filter: blur(3px);
+    display: flex; justify-content: center; align-items: center; z-index: 200;
+  }
+  .modal-box-l3 {
+    background: #1e1e1e; width: 90%; max-width: 700px;
+    border-radius: 10px; overflow: hidden; box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+  }
+  .modal-top-l3 {
+    background: #2d2d2d; padding: 10px 20px; color: #9cdcfe;
+    display: flex; justify-content: space-between; border-bottom: 1px solid #333;
+  }
+  .code-block-l3 {
+    padding: 20px; color: #d4d4d4; font-family: 'Consolas', monospace; 
+    font-size: 14px; margin: 0; overflow-x: auto; line-height: 1.5;
+  }
+  
+  /* 나가기 버튼 (플로팅) */
+  .sim-exit-btn {
+    position: fixed; bottom: 20px; right: 20px;
+    background-color: #333; color: white;
+    padding: 10px 20px; border-radius: 30px;
+    text-decoration: none; font-size: 0.9rem; font-weight: 600;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    opacity: 0.9; z-index: 9999; transition: opacity 0.3s;
+  }
+  .sim-exit-btn:hover { opacity: 1; background-color: #000; }

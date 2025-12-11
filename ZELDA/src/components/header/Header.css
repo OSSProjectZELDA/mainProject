@@ -1,0 +1,262 @@
+/* =========================================
+   Header.css
+   - 상단 고정 헤더
+   - 네비게이션 및 아바타
+   - UserDetailModal (깔끔한 폼 스타일)
+   ========================================= */
+
+/* 1. 헤더 전체 컨테이너 (Fixed Position) */
+.hacking-header {
+    background-color: var(--bg-panel, #ffffff);
+    border-bottom: 1px solid var(--border-color, #e2e8f0);
+    height: 60px;
+    
+    /* [중요] 화면 상단 고정 */
+    position: fixed; 
+    top: 0;
+    left: 0;
+    width: 100%; 
+    z-index: 1000; /* 모든 요소보다 위에 위치 */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  }
+
+  .header-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 30px;
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  /* 2. 왼쪽 로고 영역 */
+  .header-content > a {
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+  }
+  
+  .hacking-title {
+    margin: 0; 
+    font-size: 1.4rem;
+    color: #1e293b;
+    font-weight: 800; 
+    letter-spacing: -0.5px;
+  }
+  
+  .level-title {
+    font-weight: 600;
+    color: var(--accent-color, #2563eb);
+    margin-left: 12px;
+    font-size: 0.95rem;
+    padding-top: 4px;
+  }
+  
+  /* 3. 오른쪽 네비게이션 영역 */
+  .top-nav {
+    display: flex;
+    align-items: center;
+    gap: 12px; 
+  }
+  
+  /* 버튼 스타일 (Login/Signup 공통) */
+  .nav-btn {
+    background-color: transparent;
+    border: 1px solid var(--border-color, #e2e8f0);
+    color: var(--text-sub, #6b7280);
+    padding: 8px 16px;
+    font-family: var(--font-mono, monospace);
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .nav-btn:hover {
+    background-color: #f8fafc;
+    color: var(--accent-color, #2563eb);
+    border-color: var(--accent-color, #2563eb);
+  }
+  
+  /* Signup 버튼 강조 */
+  .nav-btn.signup {
+    background-color: var(--accent-color, #2563eb);
+    color: white;
+    border: 1px solid var(--accent-color, #2563eb);
+  }
+  
+  .nav-btn.signup:hover {
+    background-color: #1d4ed8;
+    transform: translateY(-1px);
+  }
+  
+  /* 프로필 아바타 */
+  .user-avatar-container {
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    margin-left: 10px;
+  }
+  
+  .user-avatar-container:hover {
+    transform: scale(1.1);
+  }
+  
+  .user-avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background-color: var(--accent-color, #2563eb);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.1rem;
+    font-weight: bold;
+    box-shadow: 0 2px 4px rgba(37, 99, 235, 0.3);
+  }
+  
+  /* =========================================
+     [모달] UserDetailModal 스타일
+     - 게임 카드가 아닌 깔끔한 폼 형태로 재정의
+     ========================================= */
+  .modal-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    backdrop-filter: blur(5px);
+  }
+  
+  .modal-content {
+    width: 100%;
+    max-width: 400px;
+    background-color: white;
+    /* 상단 패딩을 40px로 늘려 X버튼과 겹치지 않게 함 */
+    padding: 40px 30px 30px; 
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+    position: relative;
+    border: 1px solid #e5e7eb;
+    animation: popIn 0.3s ease-out;
+  
+    /* StartPage의 hacker-card 효과 무력화 */
+    transform: none !important;
+  }
+  
+  /* StartPage의 hover 효과 무력화 */
+  .modal-content:hover {
+    transform: none !important;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.2) !important;
+  }
+  
+  /* 모달 내부 요소 숨김 (게임 카드용 UI) */
+  .modal-content .card-header { display: none; }
+  
+  /* 모달 타이틀 */
+  .modal-content .level-title {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: #1e293b;
+    text-align: center;
+    margin: 0 0 20px 0;
+  }
+  
+  /* 구분선 */
+  .modal-content .separator {
+    height: 2px;
+    background-color: #f1f5f9;
+    margin: 0 0 25px 0;
+    width: 100%;
+  }
+  
+  /* 입력 폼 영역 */
+  .form-section {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 30px;
+  }
+  
+  .form-section label {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #64748b;
+    margin-bottom: 4px;
+    display: block;
+    text-align: left;
+  }
+  
+  /* 인풋 박스 */
+  .modal-content .hacker-input {
+    width: 100%;
+    padding: 12px 16px;
+    font-size: 1rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    background-color: #f8fafc;
+    box-sizing: border-box;
+    font-family: var(--font-mono, monospace);
+    transition: all 0.2s;
+  }
+  
+  .modal-content .hacker-input:focus {
+    outline: none;
+    background-color: white;
+    border-color: var(--accent-color, #2563eb);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  }
+  
+  /* 버튼 액션 */
+  .modal-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .modal-actions .nav-btn {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: none;
+  }
+  
+  /* 닫기 버튼 (X) - 우측 상단 고정 */
+  .close-btn {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: #94a3b8;
+    cursor: pointer;
+    padding: 5px;
+    line-height: 1;
+    z-index: 10;
+  }
+  .close-btn:hover { color: #334155; }
+  
+  /* 탈퇴 버튼 */
+  .modal-actions .nav-btn.logout {
+    background-color: transparent;
+    color: #ef4444;
+    border: 1px dashed #ef4444;
+    margin-top: 10px;
+  }
+  .modal-actions .nav-btn.logout:hover {
+    background-color: #fef2f2;
+  }
+  
+  @keyframes popIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+  }
