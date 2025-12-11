@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import './Level1.css';
+import Header from '../../components/header/Header.jsx';
+import { useAuth } from '../../context/AuthContext';
 
 function Level1() { 
     const [activeSection, setActiveSection] = useState('intro');
     const [simUsername, setSimUsername] = useState('');
     const [simPassword, setSimPassword] = useState('');
+    const { user } = useAuth();
     
     // 주석 감지
     const isCommented = simUsername.includes('--') || simUsername.includes('#');
@@ -17,10 +20,7 @@ function Level1() {
     return (
         <div>
             {/* 헤더 */}
-            <header className="hacking-header">
-                <h1 style={{ margin: 0, fontSize: '1.2rem', color: '#1e293b', fontWeight: '800' }}>Hacking Lab <span style={{fontWeight:'400', color:'#94a3b8'}}>| Level 1</span></h1>
-                <Link to="/" style={{ textDecoration: 'none', color: '#64748b', fontSize:'0.9rem', fontWeight: '500' }}>Exit</Link>
-            </header>
+            <Header level={1} user={user} />
             
             <div className="theory-container">
                 

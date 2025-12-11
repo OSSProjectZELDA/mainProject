@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import './Level2.css';
+import Header from '../../components/header/Header.jsx';
+import { useAuth } from '../../context/AuthContext';
 
 function Level2() { 
     // 시뮬레이션 상태
     const [activeSection, setActiveSection] = useState('intro');
     const [simInput, setSimInput] = useState('');
+    const { user } = useAuth();
     
     // 위험한 스크립트 감지 (간단한 예시: <script>)
     // 실제로는 인코딩되지 않은 <, > 등이 핵심
@@ -23,11 +26,7 @@ function Level2() {
     return (
         <div>
             {/* 헤더 */}
-            <header className="hacking-header">
-                <h1 style={{ margin: 0, fontSize: '1.2rem', color: '#1e293b', fontWeight: '800' }}>Hacking Lab <span style={{fontWeight:'400', color:'#94a3b8'}}>| Level 2</span></h1>
-                <Link to="/" style={{ textDecoration: 'none', color: '#64748b', fontSize:'0.9rem', fontWeight: '500' }}>Exit</Link>
-            </header>
-            
+            <Header level={2} user ={user} />
             <div className="theory-container">
                 
                 {/* [왼쪽] 사이드바 */}
