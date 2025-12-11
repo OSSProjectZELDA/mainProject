@@ -26,42 +26,23 @@ html {
     padding-top: 60px; /* Header height */
   }
   
-  /* =========================================
-     [Part 1] 이론/학습 페이지 스타일 (Theory)
-     사용처: Level3.jsx
-     ========================================= */
-  
-  
-  
-  /* 전체 레이아웃 컨테이너 */
   .theory-container {
     display: flex;
-    flex-direction: row;
-    align-items: flex-start; /* 사이드바 height stretch 방지 */
-    
     max-width: 1200px;
-    margin: 20px auto 50px; /* 상단, 하단 마진 추가 */
-    
+    margin: 0 auto;
   }
   
-  /* 3. 사이드바 (Sticky) */
+  /* 사이드바 */
   .sidebar {
     width: 240px;
     flex-shrink: 0;
-    background-color: var(--bg-panel);
+    background-color: var(--bg-body);
     border-right: 1px solid var(--border-color);
-    
-    position: -webkit-sticky;
     position: sticky;
-    
-    top: 60px; 
-    
-    max-height: calc(100vh - 80px); 
-    overflow-y: auto;
-    
-    padding: 10px 15px 20px 0;
+    top: 60px;
+    height: calc(100vh - 60px);
+    padding: 25px 15px;
     box-sizing: border-box;
-    margin-right: 20px;
   }
   
   .sidebar-title {
@@ -96,14 +77,8 @@ html {
   /* 본문 영역 */
   .content-panel {
     flex-grow: 1;
+    padding: 40px 60px;
     background-color: var(--bg-panel);
-    padding: 40px;
-    border-left: 1px solid #f1f5f9;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-    
-    overflow: visible; 
-    height: auto;
   }
   
   .section-title { font-size: 1.8rem; font-weight: 800; margin-bottom: 10px; margin-top: 0; }
