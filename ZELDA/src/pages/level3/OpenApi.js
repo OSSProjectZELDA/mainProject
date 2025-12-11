@@ -1,12 +1,11 @@
-// API 응답에는 통화명이 없으므로, 자주 쓰이는 코드와 스크린샷에 포함된 코드를 위주로 작성했습니다.
-const CURRENCY_NAMES = {
-    // 자주 쓰이는 주요 통화
+// 1. 통화 이름 데이터 (names)
+// (모든 통화 코드를 다 넣어서 완벽하게 매칭되도록 했습니다)
+const names = {
     "USD": "미국 달러", "JPY": "일본 엔", "EUR": "유로",
     "GBP": "영국 파운드", "CAD": "캐나다 달러", "AUD": "호주 달러",
     "CHF": "스위스 프랑", "HKD": "홍콩 달러", "SGD": "싱가포르 달러", 
     "CNH": "역외 위안화", "CNY": "중국 위안", "NZD": "뉴질랜드 달러",
     "THB": "태국 바트", "VND": "베트남 동", "ZAR": "남아공 랜드",
-    // JSON 응답에 포함된 통화 (누락분 보강)
     "AED": "아랍에미리트 디르함", "AFN": "아프가니스탄 아프가니", "ALL": "알바니아 레크",
     "AMD": "아르메니아 드람", "ANG": "네덜란드령 안틸레스 길더", "AOA": "앙골라 콴자",
     "ARS": "아르헨티나 페소", "AWG": "아루바 플로린", "AZN": "아제르바이잔 마나트",
@@ -57,93 +56,50 @@ const CURRENCY_NAMES = {
     "YER": "예멘 리얄", "ZMW": "잠비아 콰차", "ZWG": "짐바브웨 달러 (구)",
     "ZWL": "짐바브웨 달러"
 };
-// ExchangeRate-API 키 적용
-const API_KEY = '802652e2dc2de4a8408dc9d7'; 
 
-/**
- ExchangeRate-API를 사용하여 환율 데이터를 조회하고, 
- Level3Game.js 형식(통화 단위 당 KRW)에 맞게 변환하여 반환합니다.
- 기준 통화: USD**
- @returns {Promise<Array>} 환율 데이터 목록
- */
-export const fetchExchangeRateList = async () => {
-    // 기준 통화를 USD로 설정
-    const url = `https://v6.exchangerate-api.com/v6/${API_KEY}/latest/USD`;
+const KEY = '802652e2dc2de4a8408dc9d7';
+const URL = `https://v6.exchangerate-api.com/v6/${KEY}/latest/USD`;
 
+// 2. 환율 가져오기 (이름 짧고 쉽게: getRates)
+export const getRates = async () => {
     try {
-        const response = await fetch(url);
-        
-        // HTTP 응답 코드가 200번대가 아니면 에러로 처리
-        if (!response.ok) { 
-            console.error(`API 호출 실패: HTTP Error ${response.status}`);
-            throw new Error(`API Request failed with status: ${response.status}`);
-        }
+        const res = await fetch(URL);
+        if (!res.ok) throw new Error("API Error");
 
-        const data = await response.json();
-        
-        // 데이터 성공 및 유효성 검사
-        if (data.result === 'success' && data.conversion_rates) {
-            const rates = data.conversion_rates;
-            
-            // 1 USD 당 KRW 환율 값을 추출
-            const usdToKrwRate = rates['KRW']; 
-            if (!usdToKrwRate) {
-                 console.error("API 응답에 KRW 환율 정보가 없어 변환 불가.");
-                 return MOCK_DATA;
-            }
+        const json = await res.json();
+        const list = json.conversion_rates; 
+        const krw = list['KRW']; // 1달러 = 1400원
 
-            const formattedData = Object.keys(rates).map(code => {
-                const rateValue = rates[code]; // 1 USD당 해당 통화 단위 값
-                
-                let krwRatePerUnit; // 최종적으로 1 단위 통화 당 KRW 값
-                
-                if (code === 'USD') {
-                    // USD는 1달러 당 KRW 환율 그대로 사용
-                    krwRatePerUnit = usdToKrwRate;
-                } else {
-                    // 다른 통화: 1 통화 단위 당 KRW 가치로 역산
-                    krwRatePerUnit = usdToKrwRate / rateValue;
-                }
-                
-                return {
-                    cur_unit: code, 
-                    // 🚨 통화명 맵핑 테이블 적용
-                    cur_nm: CURRENCY_NAMES[code] || `${code} (KRW 환산)`, 
-                    // 소수점 2자리까지 표시하고 콤마 포맷팅
-                    deal_bas_r: krwRatePerUnit.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ","),
-                };
-            // KRW 자체와 베트남 동(VND) 데이터 제외
-            }).filter(item => item.cur_unit !== 'KRW' && item.cur_unit !== 'VND'); 
+        // 데이터 가공 (복잡한 로직 제거하고 핵심만)
+        const result = Object.keys(list).map(code => {
+            // 계산: (1달러당 원화) / (1달러당 해당통화)
+            const val = krw / list[code]; 
 
-            console.log("ExchangeRate API Data loaded successfully with USD Base.");
-            return formattedData;
-        }
+            return {
+                code: code,                  // 통화 코드 (USD)
+                name: names[code] || code,   // 한글 이름
+                rate: val.toLocaleString(undefined, { // 콤마 찍기
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                })
+            };
+        });
 
-        console.warn("API 호출 성공했으나, 데이터 형식이 예상과 다름.");
-        return MOCK_DATA;
-        
+        // 한국돈(KRW)이랑 베트남(VND) 빼고 반환
+        return result.filter(item => item.code !== 'KRW' && item.code !== 'VND');
+
     } catch (err) {
-        // API 호출 자체에서 오류 발생 시
-        console.error("API 호출 실패:", err);
-        return MOCK_DATA;
+        console.error("API 에러:", err);
+        return [];
     }
 };
 
-/**
- 주어진 검색어로 환율 데이터를 필터링합니다. (Searching 기능)
- 이 함수는 클라이언트 측 필터링을 위해 존재합니다.
- @param {Array} data - 전체 환율 데이터 목록
- @param {string} searchTerm - 검색어 (통화명 또는 통화코드)
- @returns {Array} 필터링된 데이터 목록
- */
-export const searchExchangeRate = (data, searchTerm) => {
-    if (!searchTerm) return data; // 검색어가 없으면 전체 반환
+// 3. 검색 함수 (이름 짧고 쉽게: find)
+export const find = (list, text) => {
+    if (!text) return list; // 검색어 없으면 전체 반환
 
-    const search = searchTerm.toUpperCase();
-    return data.filter(item => {
-        // 통화명(cur_nm)과 통화코드(cur_unit) 모두 검색에 포함
-        const matchesSearch = (item.cur_nm && item.cur_nm.toUpperCase().includes(search)) || 
-                              (item.cur_unit && item.cur_unit.toUpperCase().includes(search));
-        return matchesSearch;
-    });
+    const key = text.toUpperCase(); // 대문자로 변환 (aud -> AUD)
+    
+    // 이름이나 코드에 검색어가 포함되면 OK
+    return list.filter(item => item.name.includes(key) || item.code.includes(key));
 };

@@ -1,351 +1,196 @@
-/* Level3.css - Modern Fintech Style */
+/* src/pages/level3/Level3.css */
 
+/* =========================================
+   [1] 공통 레이아웃 (이론 + 게임)
+   ========================================= */
 :root {
-  /* Brand Colors */
-  --bank-primary: #1e40af;       /* 짙은 네이비 (신뢰) */
-  --bank-secondary: #3b82f6;     /* 비비드 블루 (강조) */
-  --bank-bg: #f1f5f9;            /* 전체 배경 (쿨 그레이) */
-  --bank-card-bg: #ffffff;       /* 카드 배경 */
-  
-  /* Status Colors */
-  --status-safe-bg: #d1fae5;
-  --status-safe-text: #065f46;
-  --status-danger-bg: #fee2e2;
-  --status-danger-text: #b91c1c;
-  
-  /* Typography */
-  --text-main: #1f2937;
+  --primary: #2563eb;
+  --danger: #ef4444;
+  --success: #10b981;
+  --bg-gray: #f8fafc;
+  --border: #e2e8f0;
+  --text-main: #1e293b;
   --text-sub: #64748b;
-  
-  /* Borders & Shadows */
-  --border-color: #e2e8f0;
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
 }
 
 body {
-  background-color: var(--bank-bg);
-  color: var(--text-main);
-  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
   margin: 0;
-  -webkit-font-smoothing: antialiased;
+  font-family: 'Pretendard', sans-serif;
+  color: var(--text-main);
+  background-color: var(--bg-gray);
 }
 
-/* --- Layout --- */
-.game-container-l3 {
+/* =========================================
+   [2] 이론 페이지 스타일 (Level3.js)
+   ========================================= */
+.theory-container {
   display: flex;
-  justify-content: center;
-  align-items: center; /* 세로 중앙 정렬 추가 */
-  padding: 40px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-top: 60px; /* 헤더 높이 */
+}
+
+/* 사이드바 */
+.sidebar {
+  width: 240px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 80px;
+  height: calc(100vh - 80px);
+  padding: 20px;
+  border-right: 1px solid var(--border);
+  background: white;
+}
+
+.sidebar-title {
+  font-weight: 800; color: #94a3b8; margin-bottom: 15px; font-size: 0.8rem;
+}
+
+.sidebar-list { list-style: none; padding: 0; }
+.sidebar-link {
+  display: block; padding: 10px; color: var(--text-sub);
+  text-decoration: none; border-radius: 6px; font-size: 0.9rem;
+  margin-bottom: 5px; cursor: pointer;
+}
+.sidebar-link:hover { background: #eff6ff; color: var(--primary); }
+.sidebar-link.active { background: #eff6ff; color: var(--primary); font-weight: 700; }
+
+.game-btn-sidebar {
+  display: block; margin-top: 20px; padding: 12px;
+  background: #1e293b; color: white; text-align: center;
+  border-radius: 8px; text-decoration: none; font-weight: 700;
+}
+.game-btn-sidebar:hover { background: black; }
+
+/* 본문 */
+.content-panel {
+  flex: 1; padding: 40px 60px; background: white; min-height: 100vh;
+}
+.section-title { font-size: 2rem; font-weight: 800; margin-bottom: 10px; }
+.sub-title1 { font-size: 1.4rem; font-weight: 700; margin-top: 50px; border-left: 4px solid var(--primary); padding-left: 10px; }
+.text-body { line-height: 1.7; color: #475569; margin-bottom: 20px; }
+
+/* 미니 실습 박스 */
+.practice-box {
+  border: 1px solid var(--border); border-radius: 12px; padding: 25px;
+  background: #f8fafc; margin: 20px 0;
+}
+.code-block-viewer {
+  background: #1e1e1e; color: #d4d4d4; padding: 20px;
+  border-radius: 8px; font-family: monospace; overflow-x: auto;
+}
+
+
+/* =========================================
+   [3] 게임 페이지 스타일 (Level3Game.js)
+   ★ 여기가 중요합니다! ★
+   ========================================= */
+
+.game-container-l3 {
   min-height: 100vh;
-  box-sizing: border-box;
+  display: flex; justify-content: center; align-items: center;
+  padding: 40px; background: #e0f2fe; /* 배경색 */
 }
 
 .dashboard-card-l3 {
-  width: 100%;
-  max-width: 960px; /* 너비 확장 */
-  background-color: var(--bank-card-bg);
-  border-radius: 24px; /* 둥근 모서리 강조 */
-  box-shadow: var(--shadow-lg);
-  overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.5);
+  width: 100%; max-width: 800px;
+  background: white; border-radius: 20px;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+  overflow: hidden; border: 1px solid rgba(255,255,255,0.5);
 }
 
-/* --- Header --- */
+/* 헤더 */
 .bank-header-l3 {
-  background: linear-gradient(135deg, #1e3a8a 0%, #172554 100%);
-  padding: 24px 32px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  color: white;
-  box-shadow: 0 4px 12px rgba(30, 58, 138, 0.15);
+  background: linear-gradient(135deg, #1e3a8a, #172554);
+  color: white; padding: 20px 30px;
+  display: flex; justify-content: space-between; align-items: center;
 }
-
-.bank-header-l3 h1 {
-  font-size: 1.4rem;
-  letter-spacing: -0.5px;
-}
-
-.admin-tag-l3 {
-  font-size: 0.7rem;
-  padding: 4px 10px;
-  border-radius: 12px;
-  background-color: #f59e0b; /* Gold */
-  color: #111;
-  font-weight: 800;
-  margin-left: 12px;
-  vertical-align: middle;
-  text-transform: uppercase;
-}
-
 .view-source-btn-l3 {
-  background: rgba(255, 255, 255, 0.15);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  color: white;
-  padding: 10px 18px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 0.9rem;
-  font-weight: 600;
-  transition: all 0.2s ease;
-  backdrop-filter: blur(4px);
+  background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3);
+  color: white; padding: 8px 16px; border-radius: 6px; cursor: pointer;
+}
+.view-source-btn-l3:hover { background: rgba(255,255,255,0.2); }
+
+.bank-content-l3 { padding: 30px; }
+
+/* 소스코드 영역 */
+.source-code-section {
+  margin-bottom: 20px; background: #1e1e1e; padding: 15px; border-radius: 8px;
+  border: 1px solid #333;
 }
 
-.view-source-btn-l3:hover {
-  background: rgba(255, 255, 255, 0.25);
-  transform: translateY(-1px);
-}
-
-/* --- Content Area --- */
-.bank-content-l3 {
-  padding: 40px;
-}
-
-/* Section Header */
+/* 1. 검색창 & 환율 리스트 */
 .section-header {
-  font-size: 1.15rem;
-  font-weight: 700;
-  color: var(--bank-primary);
-  margin-bottom: 16px;
-  margin-top: 10px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.section-header::before {
-  content: '';
-  display: block;
-  width: 4px;
-  height: 20px;
-  background-color: var(--bank-secondary);
-  border-radius: 2px;
+  font-weight: 800; color: #1e3a8a; margin-bottom: 10px; font-size: 1.1rem;
 }
 
-/* Search Box */
 .search-box {
-  width: 100%;
-  padding: 14px 16px;
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  font-size: 1rem;
-  margin-bottom: 20px;
-  background-color: #f8fafc;
-  transition: all 0.2s;
-  box-sizing: border-box; /* 패딩 포함 크기 계산 */
-}
-.search-box:focus {
-  outline: none;
-  border-color: var(--bank-secondary);
-  background-color: white;
-  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+  width: 100%; padding: 12px; border: 1px solid #cbd5e1;
+  border-radius: 8px; font-size: 1rem; margin-bottom: 15px;
+  box-sizing: border-box;
 }
 
-/* --- Rate Table --- */
 .rate-list-container-l3 {
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  overflow: hidden;
-  max-height: 240px;
-  overflow-y: auto;
-  box-shadow: var(--shadow-sm);
+  height: 250px; overflow-y: auto;
+  border: 1px solid #e2e8f0; border-radius: 8px;
 }
 
-.rate-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
+.rate-table { width: 100%; border-collapse: collapse; }
 .rate-table th {
-  background: #f8fafc;
-  padding: 14px 20px;
-  text-align: left;
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--text-sub);
-  position: sticky;
-  top: 0;
-  border-bottom: 1px solid var(--border-color);
-  z-index: 10;
+  position: sticky; top: 0; background: #f1f5f9;
+  padding: 10px; font-size: 0.9rem; color: #64748b; text-align: left;
 }
-
 .rate-table td {
-  padding: 14px 20px;
-  border-bottom: 1px solid #f1f5f9;
-  font-size: 0.95rem;
-  color: var(--text-main);
+  padding: 10px; border-bottom: 1px solid #f1f5f9; font-size: 0.95rem; cursor: pointer;
 }
+.rate-row:hover { background: #eff6ff; }
+/* AUD 선택 시 강조 효과 */
+.rate-row.selected { background: #fee2e2; border-left: 4px solid #ef4444; }
 
-.rate-row {
-  cursor: pointer;
-  transition: background-color 0.15s ease;
-}
-
-.rate-row:hover {
-  background-color: #eff6ff;
-}
-
-/* 선택된 행 스타일 (AUD) */
-.rate-row.selected {
-  background-color: #fee2e2;
-  position: relative;
-}
-.rate-row.selected td:first-child::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 4px;
-  background-color: #ef4444;
-}
-
-/* --- Asset Card (Target) --- */
+/* 2. 내 지갑 카드 */
 .asset-card {
-  background: white;
-  border: 1px solid var(--border-color);
-  border-radius: 16px;
-  padding: 24px;
-  margin-top: 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background: white; border: 1px solid #e2e8f0; border-radius: 12px;
+  padding: 20px; display: flex; justify-content: space-between; align-items: center;
+  transition: all 0.3s;
 }
-
+/* 해킹 준비 완료 시 붉게 변함 */
 .asset-card.danger {
-  border-color: #fca5a5;
-  background-color: #fff1f2;
-  box-shadow: 0 10px 15px -3px rgba(220, 38, 38, 0.1);
-  transform: translateY(-2px);
+  border-color: #ef4444; background: #fef2f2;
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.1);
 }
 
-.balance-label {
-  font-size: 0.9rem;
-  color: var(--text-sub);
-  margin-bottom: 6px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  font-weight: 600;
-}
-
-.balance-amount {
-  font-size: 2.2rem;
-  font-weight: 800;
-  color: var(--text-main);
-  font-family: 'Roboto Mono', monospace; /* 숫자 전용 폰트 */
-  letter-spacing: -1px;
-}
-
-.balance-amount.changed {
-  color: #dc2626; /* 붉은색 */
-}
+.balance-label { font-size: 0.85rem; color: #64748b; }
+.balance-amount { font-size: 1.8rem; font-weight: 800; color: #1e293b; }
 
 .transfer-status-badge {
-  padding: 8px 16px;
-  border-radius: 30px;
-  font-size: 0.85rem;
-  font-weight: 700;
-  text-align: center;
-  min-width: 100px;
+  padding: 6px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 700;
 }
+.status-safe { background: #dcfce7; color: #166534; }
+.status-danger { background: #fee2e2; color: #991b1b; animation: pulse 1.5s infinite; }
 
-.status-safe {
-  background-color: var(--status-safe-bg);
-  color: var(--status-safe-text);
-}
-
-.status-danger {
-  background-color: var(--status-danger-bg);
-  color: var(--status-danger-text);
-  animation: pulse-red 2s infinite;
-}
-
-/* --- Source Code Viewer --- */
-.source-code-section {
-  background-color: #1e1e1e; /* Dark Mode for Code */
-  border-radius: 12px;
-  padding: 20px;
-  margin-bottom: 30px;
-  border: 1px solid #333;
-  box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);
-  animation: slideDown 0.3s ease-out;
-}
-
-.code-block-viewer {
-  margin: 0;
-  color: #d4d4d4;
-  font-family: 'Consolas', 'Monaco', monospace;
-  font-size: 0.9rem;
-  line-height: 1.6;
-  white-space: pre-wrap;
-  word-break: break-all;
-}
-
-/* --- Mission Guide Box --- */
+/* 3. 미션 가이드 박스 */
 .mission-box {
-  background-color: #fffbeb; /* 옅은 노란색 */
-  border: 1px solid #fcd34d;
-  border-radius: 12px;
-  padding: 24px;
-  margin-top: 30px;
+  margin-top: 30px; background: #fffbeb; border: 1px solid #fbbf24;
+  border-radius: 12px; padding: 20px;
 }
-
-.mission-title {
-  color: #92400e;
-  font-weight: 800;
-  font-size: 1.1rem;
-  margin-bottom: 16px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
+.mission-title { font-weight: 800; color: #92400e; margin-bottom: 10px; }
 .code-block-l3 {
-  background-color: #1f2937;
-  color: #a3e635; /* 라임 그린 */
-  padding: 16px;
-  border-radius: 8px;
-  font-family: 'Consolas', monospace;
-  font-size: 0.9rem;
-  margin-top: 12px;
-  border-left: 4px solid #f59e0b;
-  overflow-x: auto;
+  background: #1e1e1e; color: #a3e635; padding: 10px;
+  border-radius: 6px; font-family: monospace; font-size: 0.9rem;
+  margin-top: 10px; overflow-x: auto;
 }
 
-/* Exit Button */
+/* 나가기 버튼 */
 .sim-exit-btn {
-  position: fixed;
-  bottom: 30px;
-  right: 30px;
-  background-color: #1f2937;
-  color: white;
-  padding: 12px 24px;
-  border-radius: 50px;
-  text-decoration: none;
-  font-weight: 600;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-  transition: transform 0.2s;
-  z-index: 100;
+  position: fixed; bottom: 30px; right: 30px;
+  background: #1e293b; color: white; padding: 12px 24px;
+  border-radius: 30px; text-decoration: none; font-weight: 700;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
 }
-.sim-exit-btn:hover {
-  transform: translateY(-3px);
-  background-color: #111827;
-}
+.sim-exit-btn:hover { transform: translateY(-2px); }
 
-/* Utilities */
-.hidden-security-form {
-  display: none; /* 토큰은 F12로 찾도록 숨김 */
-}
-
-@keyframes slideDown {
-  from { opacity: 0; transform: translateY(-10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes pulse-red {
-  0% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.4); }
-  70% { box-shadow: 0 0 0 10px rgba(220, 38, 38, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0); }
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.6; }
+  100% { opacity: 1; }
 }
