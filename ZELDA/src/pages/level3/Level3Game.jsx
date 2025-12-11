@@ -1,246 +1,222 @@
 import React, { useState, useEffect } from 'react';
-import { useSearchParams, Link } from 'react-router-dom';
+import { useSearchParams, Link, useNavigate } from 'react-router-dom';
 import './Level3.css'; 
-import { fetchExchangeRateList } from './OpenApi'; 
+import { getRates, find } from './OpenApi'; 
 
 function Level3Game() {
-    const [searchParams, setSearchParams] = useSearchParams();
-    const [showModal, setShowModal] = useState(false);
+    const [params, setParams] = useSearchParams();
+    const navigate = useNavigate(); 
+    const [viewCode, setViewCode] = useState(false); 
     
-    // 🛡️ [Security] 매번 바뀌는 CSRF 토큰
-    const [csrfToken, setCsrfToken] = useState("");
-
-    // 🌎 API Data State 
-    const [exchangeData, setExchangeData] = useState([]); 
-    const [loading, setLoading] = useState(true);
-    const [searchTerm, setSearchTerm] = useState(''); 
+    // 1. 데이터 상태
+    const [list, setList] = useState([]);      
+    const [search, setSearch] = useState('');  
+    const [token, setToken] = useState('');    
     
-    // 피해자(일반 사용자 / 공격 목표) 상태
-    const [user, setUser] = useState({
-        name: 'Normal_User', 
-        role: 'Premium Member', 
-        password: 'secure_password_99'
+    // 2. 내 지갑 상태
+    const [wallet, setWallet] = useState({
+        money: "100,000,000", 
+        currency: "KRW",      
+        status: "Normal",     
+        isAud: false          
     });
 
-    // 📜 분석용 DVWA 소스코드 (PHP 원본 유지)
-    const sourceCode = `<?php
+    // 초기화
+    useEffect(() => {
+        getRates().then(data => setList(data));
+        
+        // 토큰 생성
+        const newToken = Math.random().toString(36).substring(2, 10);
+        setToken(newToken);
+       
+    }, []); 
+    
+    // 3. 환율 클릭 (0원이 아니라 환전된 금액 표시)
+    const clickRate = (item) => {
+        if (item.code !== 'AUD') {
+            alert("⚠️ 타겟은 '호주 달러(AUD)'입니다. AUD를 찾아 클릭하세요.");
+            return;
+        }
+        
+        const rateVal = parseFloat(item.rate.replace(/,/g, ''));
+        const exchanged = (100000000 / rateVal).toFixed(2);
+        const displayVal = parseFloat(exchanged).toLocaleString();
+
+        setWallet({
+            money: displayVal,
+            currency: "AUD", 
+            status: "⚠️ Session: AUD (Ready)",
+            isAud: true      
+        });
+        
+        alert("⚠️ [System] 내부 세션이 'AUD'로 변경되었습니다.\n자산이 호주 달러로 표시됩니다.");
+    };
+
+    // 4. 해킹 툴
+    useEffect(() => {
+        window.hack = (query) => {
+            console.log(`🚀 Payload Sent: ${query}`);
+            setParams(new URLSearchParams(query)); 
+        };
+        return () => { delete window.hack; };
+    }, [setParams]);
+
+    // 5. 서버 로직 (해킹 성공 시 /final 이동)
+    useEffect(() => {
+        const cmd = params.get('Change'); 
+        
+        if (cmd === '1') {
+            // 토큰 검사
+            if (params.get('user_token') !== token) {
+                return alert(`🚫 Token Mismatch! (Server: ${token})`);
+            }
+            // 비밀번호 검사
+            if (params.get('password_new') !== 'hacker123') {
+                return alert("⚠️ Password Incorrect. (Hint: hacker123)");
+            }
+
+            // ★ 취약점 트리거
+            if (wallet.isAud) {
+                setWallet(prev => ({
+                    ...prev,
+                    money: "0", 
+                    status: "🚨 HACKED (Transfer Complete)"
+                }));
+                
+                alert("🎉 해킹 성공! 자산이 탈취되었습니다!");
+                
+                // 성공 시 Final 페이지로 이동
+                setTimeout(() => {
+                    navigate('/final'); 
+                }, 500);
+
+            } else {
+                alert("실패! 아직 'AUD' 상태가 아닙니다. (환율표에서 AUD를 클릭하세요)");
+            }
+        }
+    }, [params, token, wallet.isAud, navigate]);
+
+    const phpSource = `<?php
 // vulnerabilities/csrf/source/medium.php
 
-if( isset( $_GET[ 'Change' ] ) ) {
-    // 1. Anti-CSRF Token 검증 (핵심)
-    if( $_GET[ 'user_token' ] == $_SESSION[ 'session_token' ] ) {
-        $p_new = $_GET[ 'password_new' ];
-        $p_conf = $_GET[ 'password_conf' ];
-
+if( isset( $_GET['Change'] ) ) {
+    // 1. CSRF Token Check
+    if( $_GET['user_token'] == $_SESSION['token'] ) {
+        
+        // 2. Password Check
         if( $p_new == $p_conf ) {
-            // Update DB...
-            echo "<pre>Password Changed.</pre>";
+            
+            // 🚨 Logic Flaw: AUD 상태면 강제 이체
+            if( $_SESSION['currency'] == 'AUD' ) {
+                transfer_all_money(); // HACKED!
+            } else {
+                change_password();    // Normal
+            }
         }
-    } else {
-        echo "<pre>CSRF token is incorrect. Access Denied.</pre>";
     }
 }
 ?>`;
-    
-    // [1] API 데이터 로드 (List 기능) 및 CSRF 토큰 생성
-    useEffect(() => {
-        const loadDataAndToken = async () => {
-            setLoading(true);
-            
-            // API 모듈을 사용하여 데이터 로드. MOCK_DATA 또는 실제 데이터 반환.
-            const data = await fetchExchangeRateList();
-            
-            // 데이터를 상태에 저장합니다.
-            if (Array.isArray(data) && data.length > 0) {
-                 setExchangeData(data);
-            } else {
-                 // 데이터가 없거나 배열이 아니면 빈 배열로 초기화 (혹시 모를 오류 방지)
-                 setExchangeData([]);
-            }
 
-            setLoading(false);
-        };
-        
-        // CSRF 토큰 생성
-        const randomToken = Math.random().toString(36).substring(2, 12);
-        setCsrfToken(randomToken);
-        
-        loadDataAndToken();
-    }, []); 
-    
-    // [2] 콘솔 해킹 도구 등록 및 미션 설정 (변경 없음)
-    useEffect(() => {
-        // ... (기존 콘솔 로직 유지) ...
-        console.clear();
-        console.log("%c🔵 SHIELD BANK SYSTEM SHELL", "color: #00aaff; font-size: 20px; font-weight: bold; padding: 10px; border: 2px solid #00aaff;");
-        console.log("%c[Mission] 로그인된 사용자(Normal_User)의 비밀번호를 CSRF 공격으로 'hacker123'으로 변경하시오.", "color: white;");
-        console.log("%c[Hint] URL: ?Change=1&password_new=hacker123&password_conf=hacker123&user_token=...", "color: #fbbf24;");
-        console.log("%c👉 사용법: hack('?파라미터=값&...')", "color: lime; font-weight:bold;");
+    const viewList = find(list, search);
 
-        window.hack = (queryString) => {
-            if (!queryString || !queryString.startsWith('?')) {
-                console.error("❌ Error: Query must start with '?'");
-                return;
-            }
-            console.log(`%c[*] Payload Sent: ${queryString}`, "color: yellow");
-            setSearchParams(new URLSearchParams(queryString));
-            return "Request Sent.";
-        };
-
-        return () => { delete window.hack; };
-    }, [setSearchParams]);
-
-
-    // [3] 서버 동작 로직 (토큰 검증 및 비밀번호 변경)
-    useEffect(() => {
-        const change = searchParams.get('Change');
-        // 공격자가 전송하는 파라미터 (password_new, password_conf, user_token)
-        const p_new = searchParams.get('password_new');
-        const p_conf = searchParams.get('password_conf');
-        const tokenInput = searchParams.get('user_token');
-
-        if (change) {
-            // 1. 토큰 검사 (서버 소스코드의 핵심 검증 로직)
-            if (tokenInput !== csrfToken) {
-                console.error(`❌ CSRF token mismatch. (Server expected: HIDDEN, You sent: ${tokenInput || 'null'})`);
-                alert("🚫 보안 경고: CSRF Token이 일치하지 않습니다.");
-                return;
-            }
-
-            // 2. 비번 변경 (서버 소스코드의 최종 실행 로직)
-            if (p_new && p_conf && p_new === p_conf) {
-                setUser(prev => ({ ...prev, password: p_new }));
-                console.log("%c✅ Password Changed Successfully.", "color: #00ff00; background: #003300; padding: 4px;");
-                alert("System: Password Changed.");
-
-                if (p_new === 'hacker123') {
-                    setTimeout(() => alert("🎉 Level 3 Clear! 토큰 우회 성공!"), 500);
-                }
-            } else {
-                alert("System: Passwords did not match.");
-            }
-        }
-    }, [searchParams, csrfToken]);
-    
-    // List/Search 기능 구현: 데이터 필터링 (검색 기능)
-    // 이 로직은 `exchangeData` 상태에 데이터가 있다면 정상 작동합니다.
-    const filteredData = exchangeData.filter(item => {
-        const search = searchTerm.toUpperCase();
-        const matchesSearch = (item.cur_nm && item.cur_nm.toUpperCase().includes(search)) || 
-                              (item.cur_unit && item.cur_unit.toUpperCase().includes(search));
-        return matchesSearch;
-    });
-
-    // [4] 렌더링 부분 (변경 없음)
     return (
         <div className="game-container-l3">
             <div className="dashboard-card-l3">
-                <header className="bank-header-l3">
-                    <div style={{display:'flex', alignItems:'center'}}>
-                        <h1 style={{margin:0, fontSize:'1.3rem', fontWeight:'bold'}}>🔒 계정 보안 관리</h1>
-                        <span className="admin-tag-l3">USER</span>
+                
+                <header className="bank-header-l3"> 
+                    <div className="logo-area">
+                        <span style={{fontSize:'1.5rem'}}>🏦</span>
+                        <div>
+                            <h1>Global Wealth Bank</h1>
+                            <span className="sub-text">Corporate Banking</span>
+                        </div>
                     </div>
-                    <button className="view-source-btn-l3" onClick={() => setShowModal(true)}>&lt;/&gt; Source</button>
+                    <button className="view-source-btn-l3" onClick={() => setViewCode(!viewCode)}>
+                        {viewCode ? 'Close Code' : '📜 View PHP Source'}
+                    </button>
                 </header>
 
                 <div className="bank-content-l3">
-                    {/* 🕵️‍♂️ [핵심] 숨겨진 토큰 필드 */}
-                    <form className="hidden-security-form">
-                        {/* 이 필드의 value가 공격 목표입니다. */}
-                        <input type="hidden" name="user_token" value={csrfToken} id="token_field" />
-                    </form>
-
-                    {/* API 데이터 (List/Search) - 데이터는 filteredData를 통해 표시됩니다. */}
-                    <h3 style={{marginTop:'10px', marginBottom:'8px'}}>📈 거래소 현황 (시스템 상태 모니터링)</h3>
-                    <div style={{display:'flex', gap:'10px', marginBottom:'10px'}}>
-                        <input
-                            type="text"
-                            placeholder="통화 검색 (USD, JPY, 위안화 등)"
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                            style={{padding:'6px', border:'1px solid #ccc', borderRadius:'4px', flexGrow: 1, fontSize:'0.9rem'}}
-                        />
-                         <span style={{alignSelf:'center', fontSize:'0.8rem', color: exchangeData.length > 10 ? '#16a34a' : '#ef4444'}}>
-                            Status: {loading ? 'Loading...' : (exchangeData.length > 10 ? 'API OK (Full List)' : 'Local/Partial Data')}
-                        </span>
-                    </div>
                     
-                    {/* API List Table (List 기능) */}
-                    <div className="rate-list-container-l3" style={{ maxHeight: '150px', overflowY: 'auto', border: '1px solid #e2e8f0', borderRadius:'6px' }}>
-                        <table style={{width: '100%', borderCollapse: 'collapse'}}>
+                    {viewCode && (
+                        <div className="source-code-section">
+                            <h4 style={{color:'#d4d4d4', margin:'0 0 10px 0'}}>Backend Logic Analysis</h4>
+                            <pre className="code-block-viewer">{phpSource}</pre>
+                        </div>
+                    )}
+
+                    {/* ★★★ [수정됨] 토큰 찾는 곳! ★★★ 
+                        F12 -> Elements 탭에서 Ctrl+F 누르고 "user_token" 검색하면 바로 나옵니다.
+                    */}
+                    <div id="security-token-area" style={{margin: '10px 0', border: '1px dashed #ccc', padding: '5px', display:'none'}}>
+                        <label>Security Token (Hidden):</label>
+                        <input 
+                            id="user_token" 
+                            type="hidden" 
+                            name="user_token" 
+                            value={token} 
+                        />
+                    </div>
+
+                    {/* 1. 환율 리스트 */}
+                    <div className="section-header">1. Select Currency (Set Session)</div>
+                    <input
+                        className="search-box"
+                        placeholder="🔍 통화 검색 (예: AUD, 호주)"
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                    />
+
+                    <div className="rate-list-container-l3">
+                        <table className="rate-table">
                             <thead>
-                                <tr style={{backgroundColor: '#f1f5f9'}}>
-                                    <th style={{padding:'5px', fontSize:'0.8rem', textAlign: 'left'}}>코드</th>
-                                    <th style={{padding:'5px', fontSize:'0.8rem', textAlign: 'left'}}>통화명</th>
-                                    <th style={{padding:'5px', fontSize:'0.8rem', textAlign: 'right'}}>기준율</th>
-                                </tr>
+                                <tr><th>Code</th><th>Name</th><th style={{textAlign:'right'}}>Rate</th><th>Select</th></tr>
                             </thead>
                             <tbody>
-                                {/* List 기능 구현: 필터링된 전체 목록 표시 */}
-                                {filteredData.length > 0 ? filteredData.map((rate, index) => (
-                                    <tr key={rate.cur_unit || index} style={{borderBottom: '1px solid #f1f5f9'}}>
-                                        <td style={{padding:'5px', fontSize:'0.8rem', textAlign: 'left'}}>{rate.cur_unit}</td>
-                                        <td style={{padding:'5px', fontSize:'0.8rem', textAlign: 'left'}}>{rate.cur_nm}</td>
-                                        <td style={{padding:'5px', fontSize:'0.8rem', fontWeight:'bold', textAlign: 'right'}}>{rate.deal_bas_r}</td>
+                                {viewList.map((item, i) => (
+                                    <tr key={i} onClick={() => clickRate(item)} className="rate-row">
+                                        <td style={{fontWeight:'bold'}}>{item.code}</td>
+                                        <td>{item.name}</td>
+                                        <td style={{textAlign:'right'}}>{item.rate}</td>
+                                        <td style={{textAlign:'center'}}>{item.code === 'AUD' ? '🔴' : '○'}</td>
                                     </tr>
-                                )) : <tr><td colSpan="3" style={{padding:'5px', textAlign:'center', fontSize:'0.8rem'}}>검색 결과 없음</td></tr>}
+                                ))}
                             </tbody>
                         </table>
                     </div>
 
-                    {/* 원래 미션 UI (비밀번호 변경) */}
-                    <h2 style={{fontSize: '1.2rem', color: '#1e293b', marginTop:'30px', borderTop: '1px solid #e2e8f0', paddingTop: '20px'}}>
-                        🔐 비밀번호 변경 (공격 목표)
-                    </h2>
-                    <div className="user-profile-l3">
-                        <div className="avatar-l3">👤</div>
-                        <div>
-                            <h3 style={{margin:0, color:'#1e293b'}}>{user.name}</h3>
-                            <p style={{margin:0, fontSize:'0.85rem', color:'#64748b'}}>{user.role}</p>
-                        </div>
+                    {/* 2. 내 지갑 */}
+                    <div className="section-header" style={{marginTop:'30px'}}>2. Wallet Status</div>
+                    <div className={`asset-card ${wallet.isAud ? 'danger' : ''}`}>
+                         <div>
+                            <div className="balance-label">Total Assets</div>
+                            <div className="balance-amount">
+                                {wallet.money} <small>{wallet.currency}</small>
+                            </div>
+                         </div>
+                         <div className={`transfer-status-badge ${wallet.isAud ? 'status-danger' : 'status-safe'}`}>
+                            {wallet.status}
+                         </div>
                     </div>
 
-                    <div className="security-status-l3">
-                        <div className="status-item-l3">
-                            <span>Security Level</span>
-                            <span className="value-l3 medium">Medium (Token Protected)</span>
-                        </div>
-                        <div className="status-item-l3">
-                            <span>Current Password</span>
-                            <span className="value-l3 password">{user.password}</span>
-                        </div>
-                    </div>
-
-                    <div style={{background:'#fff3cd', padding:'15px', borderRadius:'8px', border: '1px solid #ffeeba', marginTop:'20px'}}>
-                        <strong style={{color: '#856404'}}>💡 미션 수행 힌트 (CSRF Medium)</strong>
-                        <ol style={{color: '#856404', marginTop: '5px', paddingLeft: '20px', fontSize: '0.9rem'}}>
-                            <li>**공격 목표 찾기:** 현재 페이지는 비밀번호 변경 요청을 처리하는 페이지입니다. (PHP 소스코드 참고)</li>
-                            <li>**토큰 위치 확인:** 브라우저 **F12**를 눌러 **Elements 탭**에서 숨겨진(Hidden) 입력 필드(<code>&lt;input type="hidden" name="user_token"...&gt;</code>)의 **value** 값을 찾으세요. </li>
-                            <li>**공격 명령어 조합:** 찾은 토큰 값을 아래 공격 명령어의 `[토큰 값]` 부분에 복사하여 넣으세요.
-                                <div style={{fontFamily:'monospace', background:'#f8f9fa', padding:'8px', borderRadius:'4px', marginTop:'5px', overflowX:'auto'}}>
-                                    <code>hack('?Change=1&password_new=hacker123&password_conf=hacker123&user_token=[토큰 값]')</code>
-                                </div>
-                            </li>
-                            <li>**실행:** 조합된 명령어를 **Console 탭**에 붙여넣고 Enter를 누르세요. </li>
+                    {/* 3. 가이드 */}
+                    <div className="mission-box">
+                        <div className="mission-title">🕵️‍♂️ Hacking Mission Guide</div>
+                        <ol style={{paddingLeft:'20px', lineHeight:'1.6', fontSize:'0.9rem', color:'#92400e'}}>
+                            <li><strong>분석:</strong> 상단 <code>View PHP Source</code>를 눌러 취약점을 확인하세요.</li>
+                            <li><strong>준비:</strong> 리스트에서 <strong>AUD</strong>를 찾아 클릭하세요. (세션 변경)</li>
+                            <li><strong>탈취:</strong> <code>F12</code>를 누르고 <code>Elements</code> 탭에서 <code>Ctrl+F</code>로 <strong>user_token</strong>을 검색하세요.</li>
+                            <li><strong>공격:</strong> 아래 명령어를 완성하여 <code>Console</code> 탭에 입력하세요.</li>
                         </ol>
+                        
+                        <div className="code-block-l3">
+                            hack('?Change=1&password_new=hacker123&password_conf=hacker123&user_token=[TOKEN]')
+                        </div>
                     </div>
 
                 </div>
             </div>
-
-            {/* 소스코드 모달 (PHP 원본 유지) */}
-            {showModal && (
-                <div className="modal-overlay-l3" onClick={() => setShowModal(false)}>
-                    <div className="modal-box-l3" onClick={e => e.stopPropagation()}>
-                        <div className="modal-top-l3">
-                            <span>vulnerabilities/csrf/source/medium.php</span>
-                            <button onClick={() => setShowModal(false)} style={{background:'none',border:'none',color:'#fff',cursor:'pointer'}}>✕</button>
-                        </div>
-                        <pre className="code-block-l3">{sourceCode}</pre>
-                    </div>
-                </div>
-            )}
-
+            
             <Link to="/level3" className="sim-exit-btn">🚪 이론으로 돌아가기</Link>
         </div>
     );
