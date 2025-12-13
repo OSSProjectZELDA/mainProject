@@ -10,7 +10,7 @@ const STORAGE = {
   notes: "safememo_data_v1",
   jwkBackup: "safememo_sess_key",
 };
-const SECRET_FLAG = "FLAG{Real_World_Hacking_Is_Silent}";
+const SECRET_FLAG = "FLAG{Praise}";
 
 export default function Level2Game() {
   // --- State ---
