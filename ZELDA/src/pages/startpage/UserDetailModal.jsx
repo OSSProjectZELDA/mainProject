@@ -57,10 +57,10 @@ const UserDetailModal = ({ onClose }) => {
   return (
     <div className="modal-overlay">
       <div className="modal-content hacker-card">
+        <button onClick={onClose} className="close-btn">X</button>
         <div className="card-header">
           <span className="status-dot green"></span>
           <span className="code-name">USER_PROFILE_CONFIG</span>
-          <button onClick={onClose} className="close-btn">X</button>
         </div>
 
         <h2 className="level-title">AGENT PROFILE</h2>
