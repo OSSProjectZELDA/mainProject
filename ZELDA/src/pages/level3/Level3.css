@@ -1,6 +1,4 @@
-/* =========================================================
-   [1] GLOBAL & SHARED Styles
-   ========================================================= */
+/* [1] GLOBAL & SHARED Styles */
 :root {
     --bg-app: #f1f5f9;       /* Light Gray Background */
     --navy-dark: #1e293b;    /* Dark Navy */
@@ -18,15 +16,12 @@ body {
     background-color: var(--bg-app);
 }
 
-/* =========================================================
-   [2] THEORY PAGE Styles (이론 페이지 전용)
-   클래스명: theory-container, sidebar, content-panel ...
-   ========================================================= */
+/* [2] THEORY PAGE Styles (이론 페이지 전용) */
 .theory-container {
     display: flex;
     max-width: 1200px;
     margin: 0 auto;
-    padding-top: 60px; /* Header Height 고려 */
+    padding-top: 60px; 
     background: transparent;
 }
 
@@ -105,9 +100,7 @@ body {
 }
 .btn-action:hover { background-color: #2563eb; transform: translateY(-2px); }
 
-/* =========================================================
-   [3] GAME PAGE Styles (실전 게임 전용) - VERTICAL LAYOUT FIX
-   ========================================================= */
+/* [3] GAME PAGE Styles (실전 게임 전용) - VERTICAL LAYOUT FIX */
 
 /* Game Wrapper */
 .game-wrapper {
@@ -126,7 +119,7 @@ body {
 /* Mock Browser Container */
 .mock-browser {
     width: 100%;
-    max-width: 600px; /* 세로형이라 너무 넓을 필요 없음, 모바일 핏 */
+    max-width: 600px; 
     background: white;
     border-radius: 16px;
     box-shadow: 0 20px 40px -5px rgba(0, 0, 0, 0.1);
@@ -166,15 +159,13 @@ body {
     padding: 30px;
     background-color: white;
     display: flex;
-    flex-direction: column; /* 무조건 세로 배치 */
-    gap: 30px; /* 섹션 간 간격 */
+    flex-direction: column; 
+    gap: 30px; 
 }
 
 /* Section Box */
 .bank-section {
     width: 100%;
-    /* border-top: 1px solid #f1f5f9; */
-    /* padding-top: 20px; */
 }
 
 /* Code Viewer (Full Width) */

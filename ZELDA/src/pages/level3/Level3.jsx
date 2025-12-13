@@ -1,17 +1,18 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import './Level3.css'; // Level 1과 동일한 스타일 구조를 공유하거나 Level3.css에 복사
+import './Level3.css';
 import Header from '../../components/header/Header.jsx';
 import { useAuth } from '../../context/AuthContext';
 
 function Level3() { 
+
     // --- 1. 네비게이션 상태 ---
     const [activeSection, setActiveSection] = useState('intro');
     const { user } = useAuth();
 
     // --- 2. 시뮬레이터 상태 (쇼핑몰 포인트 예시) ---
-    const [simState, setSimState] = useState('NORMAL'); // 내부 세션 상태 (NORMAL / HACKED)
-    const [simPoints, setSimPoints] = useState(100);    // 사용자 포인트
+    const [simState, setSimState] = useState('NORMAL');
+    const [simPoints, setSimPoints] = useState(100);    
     const [simLog, setSimLog] = useState("// 대기 중...");
 
     // 스크롤 핸들러
@@ -21,22 +22,20 @@ function Level3() {
         if (element) element.scrollIntoView({ behavior: 'smooth' });
     };
 
-    // --- 3. 시뮬레이터 동작 함수 ---
-    
     // [함정] 악성 링크 클릭 (상태 변조)
     const triggerTrap = () => {
         setSimState('HACKED'); // 사용자 몰래 상태 변경
-        setSimLog("⚠️ [SERVER] 세션 상태가 'HACKED(관리자권한)'로 변조되었습니다.");
+        setSimLog("[SERVER] 세션 상태가 'HACKED(관리자권한)'로 변조되었습니다.");
     };
 
     // [정상] 쿠폰 받기 버튼 (트리거)
     const triggerAction = () => {
         if (simState === 'HACKED') {
             setSimPoints(simPoints + 50000);
-            setSimLog("🚨 [CRITICAL] 로직 결함 발생! 관리자급 포인트(+50,000) 지급됨.");
+            setSimLog("[CRITICAL] 로직 결함 발생! 관리자급 포인트(+50,000) 지급됨.");
         } else {
             setSimPoints(simPoints + 10);
-            setSimLog("✅ [INFO] 정상적인 출석 포인트(+10) 지급됨.");
+            setSimLog("[INFO] 정상적인 출석 포인트(+10) 지급됨.");
         }
     };
 
@@ -54,7 +53,7 @@ function Level3() {
             
             <div className="theory-container">
                 
-                {/* [왼쪽] 사이드바 (Level 1과 동일 구조) */}
+                {/* [왼쪽] 사이드바 */}
                 <aside className="sidebar">
                     <div className="sidebar-title">Curriculum</div>
                     <ul className="sidebar-list">
@@ -130,7 +129,7 @@ function Level3() {
                         </ul>
                     </div>
 
-                    {/* 3. 시뮬레이터 (Level 1 스타일 적용) */}
+                    {/* 3. 시뮬레이터  */}
                     <div id="simulation" style={{ paddingTop: '5px' }}>
                         <h2 className="sub-title1">03. 상태 변조 시뮬레이터</h2>
                         <p className="text-body">
@@ -177,7 +176,7 @@ function Level3() {
                         </div>
 
                         <div className="info-box" style={{ backgroundColor: '#fff7ed', border: '1px solid #ffedd5', color: '#9a3412' }}>
-                            <strong>🎯 게임 공략 힌트:</strong><br/>
+                            <strong>게임 공략 힌트:</strong><br/>
                             이번 실전 게임(은행 해킹)도 똑같습니다.<br/>
                             1. 먼저 <strong>환율표(UI)</strong>를 조작하여 서버의 상태를 바꾸세요.<br/>
                             2. 그 다음 <strong>공격 코드(Console)</strong>를 실행하면, 단순한 비밀번호 변경이 <strong>'송금'</strong>으로 바뀝니다.

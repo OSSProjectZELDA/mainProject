@@ -113,7 +113,7 @@ if( isset( $_GET['Change'] ) ) {
                         Global Wealth Bank <span className="mock-tag tag-blue">Corporate</span>
                     </div>
                     <button className="code-toggle-btn" onClick={() => setViewCode(!viewCode)}>
-                        {viewCode ? '🚫 Hide Source' : '📜 View Source'}
+                        {viewCode ? 'Hide Source' : 'View Source'}
                     </button>
                 </header>
 
@@ -143,7 +143,7 @@ if( isset( $_GET['Change'] ) ) {
                             
                             <input
                                 className="bank-input"
-                                placeholder="🔍 Search Currency (e.g. AUD)"
+                                placeholder="Search Currency (e.g. AUD)"
                                 value={search}
                                 onChange={(e) => setSearch(e.target.value)}
                             />
@@ -216,7 +216,7 @@ if( isset( $_GET['Change'] ) ) {
                 </div>
             </div>
             
-            <Link to="/level3" className="sim-exit-btn">🚪 이론으로 돌아가기</Link>
+            <Link to="/level3" className="sim-exit-btn">이론으로 돌아가기</Link>
         </div>
     );
 }

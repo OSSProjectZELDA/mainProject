@@ -26,7 +26,7 @@ function Level1Game() {
             return;
         }
         if (/[\d]+=[']?[\d]+/.test(lowerUser)) { 
-            setMessage("🚫 [WAF Blocked] Numeric Logic Injection (1=1) is not allowed.");
+            setMessage("[WAF Blocked] Numeric Logic Injection (1=1) is not allowed.");
             return;
         }
         const quoteCount = (username.match(/'/g) || []).length;
@@ -38,7 +38,7 @@ function Level1Game() {
             await updateLevel(2);
             navigate('/admin-secret');
         } else {
-            setMessage("❌ Login Failed: Invalid username or password.");
+            setMessage("Login Failed: Invalid username or password.");
         }
     };
 
@@ -93,7 +93,7 @@ function Level1Game() {
                     </main>
                 </div>
             </div>
-                <Link to="/level3" className="sim-exit-btn">🚪 이론으로 돌아가기</Link>
+                <Link to="/level1" className="sim-exit-btn">이론으로 돌아가기</Link>
         </div>
     );
 }

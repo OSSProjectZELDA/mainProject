@@ -1,6 +1,4 @@
-/* =========================================================
-   [1] GLOBAL & SHARED STYLES (공통)
-   ========================================================= */
+/* [1] GLOBAL & SHARED STYLES (공통) */
 :root {
     --bg-app: #f1f5f9;
     --navy-dark: #0f172a;
@@ -18,9 +16,7 @@ body {
     background-color: var(--bg-app);
 }
 
-/* =========================================================
-   [2] THEORY PAGE (이론 페이지 - 건드리지 않음)
-   ========================================================= */
+/* [2] THEORY PAGE (이론 페이지 - 건드리지 않음) */
 .theory-container { display: flex; max-width: 1200px; margin: 0 auto; padding-top: 60px; }
 .sidebar { width: 240px; flex-shrink: 0; position: sticky; top: 80px; height: calc(100vh - 80px); padding: 20px; border-right: 1px solid var(--border-color); background: white; margin-right: 20px; }
 .sidebar-title { font-weight: 800; color: #94a3b8; margin-bottom: 15px; font-size: 0.8rem; }
@@ -35,9 +31,7 @@ body {
 .practice-box { background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 25px; margin: 20px 0; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
 
 
-/* =========================================================
-   [3] LEVEL 1: PC DASHBOARD STYLE (와이드 & 가로 배치)
-   ========================================================= */
+/* [3] LEVEL 1: PC DASHBOARD STYLE (와이드 & 가로 배치) */
 
 /* L1 배경 */
 .level1-wrapper {
@@ -51,7 +45,7 @@ body {
 /* L1 브라우저 창 (1000px로 조정) */
 .mock-browser.wide-mode {
     width: 100%; 
-    max-width: 1000px; /* ★ 1200px -> 1000px로 축소 ★ */
+    max-width: 1000px; 
     min-height: 600px;
     background: white; border-radius: 12px;
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
@@ -76,7 +70,7 @@ body {
 /* L1 본문 영역 (공통) */
 .mock-content.wide-content {
     flex-grow: 1; background-color: white; padding: 50px;
-    display: flex; flex-direction: column; /* 내부는 세로 정렬 */
+    display: flex; flex-direction: column; /* 내부 세로 정렬 */
     width: 100%; box-sizing: border-box;
 }
 
@@ -122,9 +116,7 @@ body {
     font-size: 1.3rem; font-weight: bold; padding: 15px 40px; border-radius: 8px; margin: 15px 0;
 }
 
-/* =========================================================
-   [4] LEVEL 3: MOBILE BANKING STYLE (좁은 폭 & 세로 배치)
-   ========================================================= */
+/* [4] LEVEL 3: MOBILE BANKING STYLE (좁은 폭 & 세로 배치) */
 
 /* L3 배경 */
 .level3-wrapper {
@@ -168,9 +160,7 @@ body {
 .mission-console { background: #0f172a; color: #e2e8f0; padding: 20px; border-radius: 12px; font-size: 0.9rem; }
 .payload-box { background: #1e293b; color: #a3e635; padding: 10px; border-radius: 6px; font-family: monospace; margin-top: 10px; word-break: break-all; }
 
-/* =========================================================
-   [5] COMMON COMPONENTS (Header & Buttons)
-   ========================================================= */
+/* [5] COMMON COMPONENTS (Header & Buttons) */
 
 /* Header (Shared but styled) */
 .mock-header {
