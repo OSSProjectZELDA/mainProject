@@ -21,20 +21,15 @@ function Level3Game() {
         isAud: false          
     });
 
-    // 초기화
     useEffect(() => {
         getRates().then(data => setList(data));
-        
-        // 토큰 생성
         const newToken = Math.random().toString(36).substring(2, 10);
         setToken(newToken);
-       
     }, []); 
     
-    // 3. 환율 클릭 (0원이 아니라 환전된 금액 표시)
     const clickRate = (item) => {
         if (item.code !== 'AUD') {
-            alert("⚠️ 타겟은 '호주 달러(AUD)'입니다. AUD를 찾아 클릭하세요.");
+            alert("타겟은 '호주 달러(AUD)'입니다. AUD를 찾아 클릭하세요.");
             return;
         }
         
@@ -45,51 +40,40 @@ function Level3Game() {
         setWallet({
             money: displayVal,
             currency: "AUD", 
-            status: "⚠️ Session: AUD (Ready)",
+            status: "Session: AUD (Ready)",
             isAud: true      
         });
         
-        alert("⚠️ [System] 내부 세션이 'AUD'로 변경되었습니다.\n자산이 호주 달러로 표시됩니다.");
+        alert("[System] 내부 세션이 'AUD'로 변경되었습니다.\n자산이 호주 달러로 표시됩니다.");
     };
 
-    // 4. 해킹 툴
     useEffect(() => {
         window.hack = (query) => {
-            console.log(`🚀 Payload Sent: ${query}`);
+            console.log(`Payload Sent: ${query}`);
             setParams(new URLSearchParams(query)); 
         };
         return () => { delete window.hack; };
     }, [setParams]);
 
-    // 5. 서버 로직 (해킹 성공 시 /final 이동)
     useEffect(() => {
         const cmd = params.get('Change'); 
-        
         if (cmd === '1') {
-            // 토큰 검사
             if (params.get('user_token') !== token) {
-                return alert(`🚫 Token Mismatch! (Server: ${token})`);
+                return alert(`Token Mismatch! (Server: ${token})`);
             }
-            // 비밀번호 검사
             if (params.get('password_new') !== 'hacker123') {
-                return alert("⚠️ Password Incorrect. (Hint: hacker123)");
+                return alert("Password Incorrect. (Hint: hacker123)");
             }
-
-            // ★ 취약점 트리거
             if (wallet.isAud) {
                 setWallet(prev => ({
                     ...prev,
                     money: "0", 
-                    status: "🚨 HACKED (Transfer Complete)"
+                    status: "HACKED (Transfer Complete)"
                 }));
-                
-                alert("🎉 해킹 성공! 자산이 탈취되었습니다!");
-                
-                // 성공 시 Final 페이지로 이동
+                alert("해킹 성공! 자산이 탈취되었습니다!");
                 setTimeout(() => {
                     navigate('/final'); 
                 }, 500);
-
             } else {
                 alert("실패! 아직 'AUD' 상태가 아닙니다. (환율표에서 AUD를 클릭하세요)");
             }
@@ -97,7 +81,7 @@ function Level3Game() {
     }, [params, token, wallet.isAud, navigate]);
 
     const phpSource = `<?php
-// vulnerabilities/csrf/source/medium.php
+// vulnerabilities/logic/source/medium.php
 
 if( isset( $_GET['Change'] ) ) {
     // 1. CSRF Token Check
@@ -106,7 +90,7 @@ if( isset( $_GET['Change'] ) ) {
         // 2. Password Check
         if( $p_new == $p_conf ) {
             
-            // 🚨 Logic Flaw: AUD 상태면 강제 이체
+            // Logic Flaw: 세션이 AUD(호주달러)면 송금 실행
             if( $_SESSION['currency'] == 'AUD' ) {
                 transfer_all_money(); // HACKED!
             } else {
@@ -120,100 +104,115 @@ if( isset( $_GET['Change'] ) ) {
     const viewList = find(list, search);
 
     return (
-        <div className="game-container-l3">
-            <div className="dashboard-card-l3">
+        <div className="game-wrapper">
+            <div className="mock-browser">
                 
-                <header className="bank-header-l3"> 
-                    <div className="logo-area">
-                        <span style={{fontSize:'1.5rem'}}>🏦</span>
-                        <div>
-                            <h1>Global Wealth Bank</h1>
-                            <span className="sub-text">Corporate Banking</span>
-                        </div>
+                {/* 헤더 */}
+                <header className="mock-header bank-mode">
+                    <div className="mock-logo">
+                        Global Wealth Bank <span className="mock-tag tag-blue">Corporate</span>
                     </div>
-                    <button className="view-source-btn-l3" onClick={() => setViewCode(!viewCode)}>
-                        {viewCode ? 'Close Code' : '📜 View PHP Source'}
+                    <button className="code-toggle-btn" onClick={() => setViewCode(!viewCode)}>
+                        {viewCode ? '🚫 Hide Source' : '📜 View Source'}
                     </button>
                 </header>
 
-                <div className="bank-content-l3">
-                    
-                    {viewCode && (
-                        <div className="source-code-section">
-                            <h4 style={{color:'#d4d4d4', margin:'0 0 10px 0'}}>Backend Logic Analysis</h4>
-                            <pre className="code-block-viewer">{phpSource}</pre>
-                        </div>
-                    )}
-
-                    {/* ★★★ [수정됨] 토큰 찾는 곳! ★★★ 
-                        F12 -> Elements 탭에서 Ctrl+F 누르고 "user_token" 검색하면 바로 나옵니다.
-                    */}
-                    <div id="security-token-area" style={{margin: '10px 0', border: '1px dashed #ccc', padding: '5px', display:'none'}}>
-                        <label>Security Token (Hidden):</label>
-                        <input 
-                            id="user_token" 
-                            type="hidden" 
-                            name="user_token" 
-                            value={token} 
-                        />
-                    </div>
-
-                    {/* 1. 환율 리스트 */}
-                    <div className="section-header">1. Select Currency (Set Session)</div>
-                    <input
-                        className="search-box"
-                        placeholder="🔍 통화 검색 (예: AUD, 호주)"
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
-                    />
-
-                    <div className="rate-list-container-l3">
-                        <table className="rate-table">
-                            <thead>
-                                <tr><th>Code</th><th>Name</th><th style={{textAlign:'right'}}>Rate</th><th>Select</th></tr>
-                            </thead>
-                            <tbody>
-                                {viewList.map((item, i) => (
-                                    <tr key={i} onClick={() => clickRate(item)} className="rate-row">
-                                        <td style={{fontWeight:'bold'}}>{item.code}</td>
-                                        <td>{item.name}</td>
-                                        <td style={{textAlign:'right'}}>{item.rate}</td>
-                                        <td style={{textAlign:'center'}}>{item.code === 'AUD' ? '🔴' : '○'}</td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
-
-                    {/* 2. 내 지갑 */}
-                    <div className="section-header" style={{marginTop:'30px'}}>2. Wallet Status</div>
-                    <div className={`asset-card ${wallet.isAud ? 'danger' : ''}`}>
-                         <div>
-                            <div className="balance-label">Total Assets</div>
-                            <div className="balance-amount">
-                                {wallet.money} <small>{wallet.currency}</small>
-                            </div>
-                         </div>
-                         <div className={`transfer-status-badge ${wallet.isAud ? 'status-danger' : 'status-safe'}`}>
-                            {wallet.status}
-                         </div>
-                    </div>
-
-                    {/* 3. 가이드 */}
-                    <div className="mission-box">
-                        <div className="mission-title">🕵️‍♂️ Hacking Mission Guide</div>
-                        <ol style={{paddingLeft:'20px', lineHeight:'1.6', fontSize:'0.9rem', color:'#92400e'}}>
-                            <li><strong>분석:</strong> 상단 <code>View PHP Source</code>를 눌러 취약점을 확인하세요.</li>
-                            <li><strong>준비:</strong> 리스트에서 <strong>AUD</strong>를 찾아 클릭하세요. (세션 변경)</li>
-                            <li><strong>탈취:</strong> <code>F12</code>를 누르고 <code>Elements</code> 탭에서 <code>Ctrl+F</code>로 <strong>user_token</strong>을 검색하세요.</li>
-                            <li><strong>공격:</strong> 아래 명령어를 완성하여 <code>Console</code> 탭에 입력하세요.</li>
-                        </ol>
+                <div className="mock-body">
+                    {/* ★ 세로 레이아웃 컨테이너 (Flex-Column) ★ */}
+                    <main className="mock-content vertical-layout">
                         
-                        <div className="code-block-l3">
-                            hack('?Change=1&password_new=hacker123&password_conf=hacker123&user_token=[TOKEN]')
-                        </div>
-                    </div>
+                        {/* 1. 소스코드 (버튼 누르면 최상단에 표시) */}
+                        {viewCode && (
+                            <div className="code-viewer-panel">
+                                <div className="panel-label">Backend Logic (PHP)</div>
+                                <pre className="code-content">{phpSource}</pre>
+                            </div>
+                        )}
 
+                        {/* 숨겨진 토큰 영역 */}
+                        <div id="security-token-area" style={{display:'none'}}>
+                            <input id="user_token" type="hidden" name="user_token" value={token} />
+                        </div>
+
+                        {/* 2. 환율 선택 테이블 */}
+                        <div className="bank-section">
+                            <div className="panel-header">
+                                <h3>1. Select Currency (Set Session)</h3>
+                                <span className="panel-desc">호주 달러(AUD)를 선택하여 서버 세션을 변경하세요.</span>
+                            </div>
+                            
+                            <input
+                                className="bank-input"
+                                placeholder="🔍 Search Currency (e.g. AUD)"
+                                value={search}
+                                onChange={(e) => setSearch(e.target.value)}
+                            />
+
+                            <div className="table-scroll-area">
+                                <table className="bank-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Code</th>
+                                            <th>Name</th>
+                                            <th className="text-right">Rate</th>
+                                            <th className="text-center">Select</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {viewList.map((item, i) => (
+                                            <tr key={i} onClick={() => clickRate(item)} className={item.code === 'AUD' ? 'target-row' : ''}>
+                                                <td className="font-bold">{item.code}</td>
+                                                <td>{item.name}</td>
+                                                <td className="text-right">{item.rate}</td>
+                                                <td className="text-center">
+                                                    {item.code === 'AUD' ? 
+                                                        <span className="select-dot target">●</span> : 
+                                                        <span className="select-dot">○</span>
+                                                    }
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        {/* 3. 지갑 상태 카드 */}
+                        <div className="bank-section">
+                            <div className="panel-header">
+                                <h3>2. Wallet Status</h3>
+                            </div>
+                            <div className={`wallet-card ${wallet.isAud ? 'danger-mode' : ''}`}>
+                                <div className="wallet-row">
+                                    <div className="wallet-label">TOTAL ASSETS</div>
+                                    <div className="wallet-balance">
+                                        <span className="currency">{wallet.currency}</span>
+                                        <span className="amount">{wallet.money}</span>
+                                    </div>
+                                </div>
+                                <div className={`status-pill ${wallet.isAud ? 'hacked' : 'normal'}`}>
+                                    Status: {wallet.status}
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* 4. 미션 가이드 */}
+                        <div className="bank-section">
+                            <div className="mission-console">
+                                <div className="console-header">Hacking Flow</div>
+                                <div className="console-body">
+                                    <p>1. 위 view source 버튼을 클릭 후, 소스코드를 분석하세요.</p>
+                                    <p>2. 위 리스트에서 <strong>AUD</strong>를 찾아 클릭하세요.</p>
+                                    <p>3. F12 개발자 도구에서 <code>user_token</code> 값을 찾으세요.</p>
+                                    <p>4. 아래 코드를 Console 탭에 입력하세요.</p>
+                                    <div className="payload-box">
+                                        hack('?Change=1&password_new=hacker123&password_conf=hacker123&user_token=<span style={{color:'yellow'}}>[TOKEN]</span>')
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </main>
                 </div>
             </div>
             
